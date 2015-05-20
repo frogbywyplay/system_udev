@@ -183,6 +183,20 @@ udev_udevd_LDFLAGS = \
 	-lrt
 udev_udevd_LDADD = libudev/libudev-private.la
 
+if ENABLE_MKNODS
+sbin_PROGRAMS += udev/mknods
+udev_mknods_SOURCES = \
+	$(udev_common_sources) \
+	udev/udevadm-info.c \
+	udev/udevadm-control.c \
+	udev/udevadm-monitor.c \
+	udev/udevadm-settle.c \
+	udev/udevadm-trigger.c \
+	udev/config.h \
+	udev/mknods.c
+udev_mknods_LDADD = libudev/libudev-private.la
+endif
+
 udev_udevadm_SOURCES = \
 	$(udev_common_sources) \
 	udev/udevadm.c \

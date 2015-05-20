@@ -201,6 +201,14 @@ AC_ARG_ENABLE([edd],
 AM_CONDITIONAL([ENABLE_EDD], [test "x$enable_edd" = "xyes"])
 
 # ------------------------------------------------------------------------------
+# mknods - create mknods, a statically configured udevadm.
+# ------------------------------------------------------------------------------
+AC_ARG_ENABLE([mknods],
+	AS_HELP_STRING([--enable-mknods], [enable mknods @<:@default=disabled@:>@]),
+	[], [enable_mknods=no])
+AM_CONDITIONAL([ENABLE_MKNODS], [test "x$enable_mknods" = "xyes"])
+
+# ------------------------------------------------------------------------------
 # Compatibility with older Linux kernels and C libraries.
 # ------------------------------------------------------------------------------
 AC_CHECK_HEADERS([linux/bsg.h])
@@ -263,4 +271,6 @@ AC_MSG_RESULT([
 	udev_acl:		${enable_udev_acl}
 	floppy:			${enable_floppy}
 	edd:			${enable_edd}
+
+	mknods:			${enable_mknods}
 ])
