@@ -70,7 +70,6 @@ int main(int argc, char *argv[])
 #endif
 		{}
 	};
-	char *commandline, *command, *arguments;
 	unsigned int i;
 	int rc = 1;
 
@@ -102,9 +101,11 @@ int main(int argc, char *argv[])
 #endif
 
 	info(udev, "runtime dir '%s'\n", udev_get_run_path(udev));
-  for (i = 0; i < ARGUMENTS_SIZE; ++i) {
-    rc |= run_command(udev, mknods_arguments[i].cmd, mknods_arguments[i].argc, (char **)mknods_arguments[i].argv);
-  }
+        rc = 0;
+        for (i = 0; i < ARGUMENTS_SIZE; ++i) {
+                optind = 0;
+                rc |= run_command(udev, mknods_arguments[i].cmd, mknods_arguments[i].argc, (char **)mknods_arguments[i].argv);
+        }
 
 out:
 	udev_unref(udev);
