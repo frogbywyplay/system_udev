@@ -209,6 +209,14 @@ AC_ARG_ENABLE([mknods],
 AM_CONDITIONAL([ENABLE_MKNODS], [test "x$enable_mknods" = "xyes"])
 
 # ------------------------------------------------------------------------------
+# udevinfo - create udevinfo.
+# ------------------------------------------------------------------------------
+AC_ARG_ENABLE([udevinfo],
+        AS_HELP_STRING([--enable-udevinfo], [enable udevinfo @<:@default=disabled@:>@]),
+                [], [enable_udevinfo=no])
+AM_CONDITIONAL([ENABLE_UDEVINFO], [test "x$enable_udevinfo" = "xyes"])
+
+# ------------------------------------------------------------------------------
 # Compatibility with older Linux kernels and C libraries.
 # ------------------------------------------------------------------------------
 AC_CHECK_HEADERS([linux/bsg.h])

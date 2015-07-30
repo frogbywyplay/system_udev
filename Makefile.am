@@ -197,6 +197,15 @@ udev_mknods_SOURCES = \
 udev_mknods_LDADD = libudev/libudev-private.la
 endif
 
+if ENABLE_UDEVINFO
+sbin_PROGRAMS += udev/udevinfo
+udev_udevinfo_SOURCES = \
+	$(udev_common_sources) \
+	udev/udevadm-info.c \
+	udev/udevinfo.c
+udev_udevinfo_LDADD = libudev/libudev-private.la
+endif
+
 udev_udevadm_SOURCES = \
 	$(udev_common_sources) \
 	udev/udevadm.c \
