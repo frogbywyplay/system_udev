@@ -35,9 +35,9 @@ extern const struct udevadm_cmd udevadm_settle;
  * Which commands you want to execute
  */
 static const struct mknods_arg mknods_arguments[ARGUMENTS_SIZE] = {
-  (const struct mknods_arg){ &udevadm_trigger, 2, (const char *[]){"--action=add", "--type=subsystems", NULL} },
-  (const struct mknods_arg){ &udevadm_trigger, 2, (const char *[]){"--action=add", "--type=devices", NULL} },
-  (const struct mknods_arg){ &udevadm_settle,  1, (const char *[]){"--timeout=60", NULL} }
+  (const struct mknods_arg){ &udevadm_trigger, 3, (const char *[]){"trigger","--action=add", "--type=subsystems"} },
+  (const struct mknods_arg){ &udevadm_trigger, 3, (const char *[]){"trigger","--action=add", "--type=devices"} },
+  (const struct mknods_arg){ &udevadm_settle,  2, (const char *[]){"settle","--timeout=60" } }
 };
 
 #endif
