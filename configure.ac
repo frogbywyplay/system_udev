@@ -39,6 +39,15 @@ AS_IF([test "x$with_selinux" = "xyes"], [
 AC_SUBST([SELINUX_LIBS])
 AM_CONDITIONAL(WITH_SELINUX, [test "x$with_selinux" = "xyes"])
 
+AC_ARG_WITH([lxc-genesis],
+    AS_HELP_STRING([--with-lxc-genesis], [enable lxc-genesis support]),
+	[], [with_lxc_genesis=no])
+AS_IF([test "x$with_lxc_genesis" = "xyes"], [
+	PKG_CHECK_MODULES(lxc_genesis, lxc_genesis >= 1.0.5)
+	AC_DEFINE(ENABLE_LXC_GENESIS, [], lxc_genesis enabled)
+])
+AM_CONDITIONAL(WITH_LXC_GENESIS, [test "x$with_lxc_genesis" = "xyes"])
+
 AC_ARG_ENABLE([debug],
 	AS_HELP_STRING([--enable-debug], [enable debug messages @<:@default=disabled@:>@]),
 	[], [enable_debug=no])
@@ -267,6 +276,7 @@ AC_MSG_RESULT([
 	logging:		${enable_logging}
 	debug:			${enable_debug}
 	selinux:		${with_selinux}
+	lxc_genesis:		${with_lxc_genesis}
 
 	gudev:			${enable_gudev}
 	gintrospection:		${enable_introspection}
