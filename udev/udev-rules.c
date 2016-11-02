@@ -31,6 +31,7 @@
 #include <time.h>
 
 #include "udev.h"
+#include "udev-rules-hardening-whitelist.h"
 
 #define PREALLOC_TOKEN			2048
 #define PREALLOC_STRBUF			32 * 1024
@@ -2252,155 +2253,73 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 			event->timeout_usec = cur->key.event_timeout * 1000 * 1000;
 			break;
 		case TK_M_PROGRAM: {
-			char program[UTIL_PATH_SIZE];
-			char **envp;
-			char result[UTIL_PATH_SIZE];
-
-			free(event->program_result);
-			event->program_result = NULL;
-			udev_event_apply_format(event, &rules->buf[cur->key.value_off], program, sizeof(program));
-			envp = udev_device_get_properties_envp(event->dev);
-			info(event->udev, "PROGRAM '%s' %s:%u\n",
-			     program,
-			     &rules->buf[rule->rule.filename_off],
-			     rule->rule.filename_line);
-
-			if (udev_event_spawn(event, program, envp, sigmask, result, sizeof(result)) < 0) {
-				if (cur->key.op != OP_NOMATCH)
-					goto nomatch;
-			} else {
-				int count;
-
-				util_remove_trailing_chars(result, '\n');
-				if (esc == ESCAPE_UNSET || esc == ESCAPE_REPLACE) {
-					count = util_replace_chars(result, UDEV_ALLOWED_CHARS_INPUT);
-					if (count > 0)
-						info(event->udev, "%i character(s) replaced\n" , count);
-				}
-				event->program_result = strdup(result);
-				dbg(event->udev, "storing result '%s'\n", event->program_result);
-				if (cur->key.op == OP_NOMATCH)
-					goto nomatch;
-			}
 			break;
 		}
 		case TK_M_IMPORT_FILE: {
-			char import[UTIL_PATH_SIZE];
-
-			udev_event_apply_format(event, &rules->buf[cur->key.value_off], import, sizeof(import));
-			if (import_file_into_properties(event->dev, import) != 0)
-				if (cur->key.op != OP_NOMATCH)
-					goto nomatch;
 			break;
 		}
 		case TK_M_IMPORT_PROG: {
 			char import[UTIL_PATH_SIZE];
 
 			udev_event_apply_format(event, &rules->buf[cur->key.value_off], import, sizeof(import));
-			info(event->udev, "IMPORT '%s' %s:%u\n",
-			     import,
-			     &rules->buf[rule->rule.filename_off],
-			     rule->rule.filename_line);
+			if (ACCEPTED_IMPORT_PROG(import) != 0) {
+				info(event->udev, "IMPORT '%s' %s:%u\n",
+						 import,
+						 &rules->buf[rule->rule.filename_off],
+						 rule->rule.filename_line);
 
-			if (import_program_into_properties(event, import, sigmask) != 0)
-				if (cur->key.op != OP_NOMATCH)
-					goto nomatch;
+				if (import_program_into_properties(event, import, sigmask) != 0)
+					if (cur->key.op != OP_NOMATCH)
+						goto nomatch;
+			}
 			break;
 		}
 		case TK_M_IMPORT_BUILTIN: {
-			/* check if we ran already */
-			if (event->builtin_run & (1 << cur->key.builtin_cmd)) {
-				info(event->udev, "IMPORT builtin skip '%s' %s:%u\n",
-				     udev_builtin_name(cur->key.builtin_cmd),
-				     &rules->buf[rule->rule.filename_off],
-				     rule->rule.filename_line);
-				/* return the result from earlier run */
-				if (event->builtin_ret & (1 << cur->key.builtin_cmd))
+			if (ACCEPTED_IMPORT_BUILTIN(udev_builtin_name(cur->key.builtin_cmd)) != 0){
+				/* check if we ran already */
+				if (event->builtin_run & (1 << cur->key.builtin_cmd)) {
+					info(event->udev, "IMPORT builtin skip '%s' %s:%u\n",
+							 udev_builtin_name(cur->key.builtin_cmd),
+							 &rules->buf[rule->rule.filename_off],
+							 rule->rule.filename_line);
+					/* return the result from earlier run */
+					if (event->builtin_ret & (1 << cur->key.builtin_cmd))
+						if (cur->key.op != OP_NOMATCH)
+							goto nomatch;
+					break;
+				}
+				/* mark as ran */
+				event->builtin_run |= (1 << cur->key.builtin_cmd);
+				info(event->udev, "IMPORT builtin '%s' %s:%u\n",
+						 udev_builtin_name(cur->key.builtin_cmd),
+						 &rules->buf[rule->rule.filename_off],
+						 rule->rule.filename_line);
+				if (udev_builtin_run(event->dev, cur->key.builtin_cmd, false) != 0) {
+					/* remember failure */
+					info(rules->udev, "IMPORT builtin '%s' returned non-zero\n",
+							 udev_builtin_name(cur->key.builtin_cmd));
+					event->builtin_ret |= (1 << cur->key.builtin_cmd);
 					if (cur->key.op != OP_NOMATCH)
 						goto nomatch;
-				break;
-			}
-			/* mark as ran */
-			event->builtin_run |= (1 << cur->key.builtin_cmd);
-			info(event->udev, "IMPORT builtin '%s' %s:%u\n",
-			     udev_builtin_name(cur->key.builtin_cmd),
-			     &rules->buf[rule->rule.filename_off],
-			     rule->rule.filename_line);
-			if (udev_builtin_run(event->dev, cur->key.builtin_cmd, false) != 0) {
-				/* remember failure */
-				info(rules->udev, "IMPORT builtin '%s' returned non-zero\n",
-				     udev_builtin_name(cur->key.builtin_cmd));
-				event->builtin_ret |= (1 << cur->key.builtin_cmd);
-				if (cur->key.op != OP_NOMATCH)
-					goto nomatch;
+				}
 			}
 			break;
 		}
 		case TK_M_IMPORT_DB: {
-			const char *key = &rules->buf[cur->key.value_off];
-			const char *value;
-
-			value = udev_device_get_property_value(event->dev_db, key);
-			if (value != NULL) {
-				struct udev_list_entry *entry;
-
-				entry = udev_device_add_property(event->dev, key, value);
-				udev_list_entry_set_num(entry, true);
-			} else {
-				if (cur->key.op != OP_NOMATCH)
-					goto nomatch;
-			}
 			break;
 		}
 		case TK_M_IMPORT_CMDLINE: {
-			FILE *f;
-			bool imported = false;
-
-			f = fopen("/proc/cmdline", "r");
-			if (f != NULL) {
-				char cmdline[4096];
-
-				if (fgets(cmdline, sizeof(cmdline), f) != NULL) {
-					const char *key = &rules->buf[cur->key.value_off];
-					char *pos;
-
-					pos = strstr(cmdline, key);
-					if (pos != NULL) {
-						struct udev_list_entry *entry;
-
-						pos += strlen(key);
-						if (pos[0] == '\0' || isspace(pos[0])) {
-							/* we import simple flags as 'FLAG=1' */
-							entry = udev_device_add_property(event->dev, key, "1");
-							udev_list_entry_set_num(entry, true);
-							imported = true;
-						} else if (pos[0] == '=') {
-							const char *value;
-
-							pos++;
-							value = pos;
-							while (pos[0] != '\0' && !isspace(pos[0]))
-								pos++;
-							pos[0] = '\0';
-							entry = udev_device_add_property(event->dev, key, value);
-							udev_list_entry_set_num(entry, true);
-							imported = true;
-						}
-					}
-				}
-				fclose(f);
-			}
-			if (!imported && cur->key.op != OP_NOMATCH)
-				goto nomatch;
 			break;
 		}
 		case TK_M_IMPORT_PARENT: {
 			char import[UTIL_PATH_SIZE];
 
 			udev_event_apply_format(event, &rules->buf[cur->key.value_off], import, sizeof(import));
-			if (import_parent_into_properties(event->dev, import) != 0)
-				if (cur->key.op != OP_NOMATCH)
-					goto nomatch;
+			if (MATCH(import, "ID_*")) {
+				if (import_parent_into_properties(event->dev, import) != 0)
+					if (cur->key.op != OP_NOMATCH)
+						goto nomatch;
+			}
 			break;
 		}
 		case TK_M_RESULT:
@@ -2648,13 +2567,15 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 			break;
 		}
 		case TK_A_RUN: {
-			if (cur->key.op == OP_ASSIGN || cur->key.op == OP_ASSIGN_FINAL)
-				udev_list_cleanup(&event->run_list);
-			info(event->udev, "RUN '%s' %s:%u\n",
-			     &rules->buf[cur->key.value_off],
-			     &rules->buf[rule->rule.filename_off],
-			     rule->rule.filename_line);
-			udev_list_entry_add(&event->run_list, &rules->buf[cur->key.value_off], NULL);
+			if (ACCEPTED_RUN(&rules->buf[rule->rule.filename_off]) != 0) {
+				if (cur->key.op == OP_ASSIGN || cur->key.op == OP_ASSIGN_FINAL)
+					udev_list_cleanup(&event->run_list);
+				info(event->udev, "RUN '%s' %s:%u\n",
+						 &rules->buf[cur->key.value_off],
+						 &rules->buf[rule->rule.filename_off],
+						 rule->rule.filename_line);
+				udev_list_entry_add(&event->run_list, &rules->buf[cur->key.value_off], NULL);
+			}
 			break;
 		}
 		case TK_A_GOTO:

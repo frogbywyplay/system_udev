@@ -33,6 +33,8 @@
 
 #define TMP_FILE_EXT		".udev-tmp"
 
+#include "udev-node-hardening-whitelist.h"
+
 int udev_node_mknod(struct udev_device *dev, const char *file, mode_t mode, uid_t uid, gid_t gid)
 {
 	struct udev *udev = udev_device_get_udev(dev);
@@ -368,6 +370,16 @@ int udev_node_add(struct udev_device *dev, mode_t mode, uid_t uid, gid_t gid)
 	char filename[UTIL_PATH_SIZE];
 	struct udev_list_entry *list_entry;
 	int err = 0;
+
+	if(!__hardening_is_allowed_device(udev_device_get_devnode(dev),
+					major(udev_device_get_devnum(dev)), minor(udev_device_get_devnum(dev)),
+					mode, uid, gid)){
+		info(udev, "not creating device node '%s', devnum=%d:%d, mode=%#o, uid=%d, gid=%d\n",
+				 udev_device_get_devnode(dev),
+				 major(udev_device_get_devnum(dev)), minor(udev_device_get_devnum(dev)),
+				 mode, uid, gid);
+		goto exit;
+	}
 
 	info(udev, "creating device node '%s', devnum=%d:%d, mode=%#o, uid=%d, gid=%d\n",
 	     udev_device_get_devnode(dev),
