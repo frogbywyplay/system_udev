@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,6 +25,7 @@
 #include <string.h>
 #include <errno.h>
 #include <getopt.h>
+#include <signal.h>
 
 #include "udev.h"
 #include "config.h"
@@ -72,7 +76,26 @@ int main(int argc, char *argv[])
 	};
 	unsigned int i;
 	int rc = 1;
+	unsigned int attempt = 10;
+	struct stat buf;
 
+	fprintf(stderr, "wait /var/run/udev/control ...\n");
+
+	for (i = 0; i < attempt; ++i) {
+		if ((rc = stat("/var/run/udev/control", &buf)) == 0) {
+			break;
+		}
+
+		rc = errno;
+		sleep(1);
+	}
+
+	if (rc) {
+		fprintf(stderr, "missing /var/run/udev/control: %s\n", strerror(rc));
+		return rc;
+	}
+
+	rc = 1;
 	udev = udev_new();
 	if (udev == NULL)
 		goto out;
@@ -107,10 +130,17 @@ int main(int argc, char *argv[])
                 rc |= run_command(udev, mknods_arguments[i].cmd, mknods_arguments[i].argc, (char **)mknods_arguments[i].argv);
         }
 
+	if (kill(1, SIGHUP) != 0) {
+		info(udev, "cannot do kill -HUP 1; %s\n", strerror(errno));
+		perror("cannot do kill -HUP 1");
+		rc |= 1;
+	};
+
 out:
 	udev_unref(udev);
 #ifdef DEBUG
 	udev_log_close();
 #endif
+
 	return rc;
 }
