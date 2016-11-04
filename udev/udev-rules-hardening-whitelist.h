@@ -5,7 +5,7 @@
 
 static int ACCEPTED_RULE(char *i, char **w, int(*m)(char *, char *))
 {
-	return 1; char **j;
+	char **j;
 	FOREACH(j, w)
 		if (m(*j, i)) return 1;
 	return 0;
