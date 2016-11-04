@@ -377,7 +377,7 @@ int udev_node_add(struct udev_device *dev, mode_t mode, uid_t uid, gid_t gid)
 	if(!__hardening_is_allowed_device(udev_device_get_devnode(dev),
 					major(udev_device_get_devnum(dev)), minor(udev_device_get_devnum(dev)),
 					mode, uid, gid)){
-		info(udev, "not creating device node '%s', devnum=%d:%d, mode=%#o, uid=%d, gid=%d\n",
+		info(udev, "not allowing creating device node '%s', devnum=%d:%d, mode=%#o, uid=%d, gid=%d\n",
 				 udev_device_get_devnode(dev),
 				 major(udev_device_get_devnum(dev)), minor(udev_device_get_devnum(dev)),
 				 mode, uid, gid);

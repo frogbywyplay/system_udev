@@ -40,15 +40,11 @@ static const struct node_hardening_whitelist_t __hardening_node_whitelist[] = {
 static int __hardening_is_allowed_device(const char *path, const int major, const int minor, const mode_t mode, const uid_t uid, const gid_t gid)
 {
 	int i;
-
-	fprintf(stderr, "###'%s' ", path);
 	for(i = 0; !END_NODE_HARDENING_WHITELIST(__hardening_node_whitelist[i]); ++i){
 		if( MATCH(path, __hardening_node_whitelist[i].path) ){
-			fprintf(stderr, " ok\n");
 			return 1;
 		}
 	}
-	fprintf(stderr, " nok\n");
 	return 0;
 }
 
