@@ -1,3 +1,8 @@
+/*************************************************
+*   This file is overriden with a load_config.   *
+*   Read this only as an example.                *
+**************************************************/
+
 #ifndef __MKNODS_CONFIG__
 #define __MKNODS_CONFIG__
 

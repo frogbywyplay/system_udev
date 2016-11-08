@@ -1,3 +1,8 @@
+/*************************************************
+*   This file is overriden with a load_config.   *
+*   Read this only as an example.                *
+**************************************************/
+
 #ifndef _UDEV_NODE_HARDENING_WHITELIST_
 #define _UDEV_NODE_HARDENING_WHITELIST_
 
