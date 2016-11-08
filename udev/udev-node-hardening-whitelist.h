@@ -13,15 +13,6 @@
 #endif /* END_NODE_HARDENING_WHITELIST_ELEMENT */
 
 
-#ifndef END_NODE_HARDENING_WHITELIST
-# define END_NODE_HARDENING_WHITELIST(x) (x.path == NULL && x.mode == 0000)
-#endif /* END_NODE_HARDENING_WHITELIST */
-
-#ifndef WN
-# define WN(node) { #node, 0000, 0, 0, 0, 0 }
-#endif
-
-
 struct node_hardening_whitelist_t {
 	char  *path;
 	mode_t mode;
@@ -39,14 +30,17 @@ struct node_hardening_whitelist_t {
 static int __hardening_is_allowed_device(const char *path, const int major, const int minor, const mode_t mode, const uid_t uid, const gid_t gid);
 
 static const struct node_hardening_whitelist_t __hardening_node_whitelist[] = {
+// 	{ "/dev/input/event0", S_IRUSR|S_IWUSR|S_IRGRP, 13, 64, 0, 0 },
 	END_NODE_HARDENING_WHITELIST_ELEMENT
 };
 
 static int __hardening_is_allowed_device(const char *path, const int major, const int minor, const mode_t mode, const uid_t uid, const gid_t gid)
 {
 	int i;
-	for(i = 0; !END_NODE_HARDENING_WHITELIST(__hardening_node_whitelist[i]); ++i){
-		if( MATCH(path, __hardening_node_whitelist[i].path) ){
+
+	for(i = 0; __hardening_node_whitelist[i].path != NULL; ++i){
+		const struct node_hardening_whitelist_t * const wl = __hardening_node_whitelist + i;
+		if(major == wl->major && minor == wl->minor && mode == wl->mode && uid == wl->uid && gid == wl->gid && MATCH(path, wl->path)){
 			return 1;
 		}
 	}
