@@ -39,7 +39,9 @@
 #include <linux/hdreg.h>
 #include <linux/fs.h>
 #include <linux/cdrom.h>
+#ifdef HAVE_LINUX_BSG_H
 #include <linux/bsg.h>
+#endif
 #include <arpa/inet.h>
 
 #include "libudev.h"
@@ -51,7 +53,9 @@ static int disk_scsi_inquiry_command(int      fd,
 				     void    *buf,
 				     size_t   buf_len)
 {
+#ifdef HAVE_LINUX_BSG_H
 	struct sg_io_v4 io_v4;
+#endif /* HAVE_LINUX_BSG_H */
 	uint8_t cdb[12];
 	uint8_t sense[32];
 	int ret;
@@ -66,6 +70,7 @@ static int disk_scsi_inquiry_command(int      fd,
 
 	memset(sense, 0, sizeof(sense));
 
+#ifdef HAVE_LINUX_BSG_H
 	memset(&io_v4, 0, sizeof(struct sg_io_v4));
 	io_v4.guard = 'Q';
 	io_v4.protocol = BSG_PROTOCOL_SCSI;
@@ -82,6 +87,9 @@ static int disk_scsi_inquiry_command(int      fd,
 	if (ret != 0) {
 		/* could be that the driver doesn't do version 4, try version 3 */
 		if (errno == EINVAL) {
+#else /* !HAVE_LINUX_BSG_H */
+		{
+#endif /* !HAVE_LINUX_BSG_H */
 			struct sg_io_hdr io_hdr;
 
 			memset(&io_hdr, 0, sizeof(struct sg_io_hdr));
@@ -107,6 +115,7 @@ static int disk_scsi_inquiry_command(int      fd,
 				ret = -1;
 				goto out;
 			}
+#ifdef HAVE_LINUX_BSG_H
 		} else {
 			goto out;
 		}
@@ -120,6 +129,9 @@ static int disk_scsi_inquiry_command(int      fd,
 		ret = -1;
 		goto out;
 	}
+#else /* !HAVE_LINUX_BSG_H */
+		}
+#endif /* !HAVE_LINUX_BSG_H */
 
  out:
 	return ret;
@@ -129,7 +141,9 @@ static int disk_identify_command(int	  fd,
 				 void	 *buf,
 				 size_t	  buf_len)
 {
+#ifdef HAVE_LINUX_BSG_H
 	struct sg_io_v4 io_v4;
+#endif /* HAVE_LINUX_BSG_H */
 	uint8_t cdb[12];
 	uint8_t sense[32];
 	uint8_t *desc = sense+8;
@@ -155,6 +169,7 @@ static int disk_identify_command(int	  fd,
 	cdb[9] = 0xEC;			/* Command: ATA IDENTIFY DEVICE */;
 	memset(sense, 0, sizeof(sense));
 
+#ifdef HAVE_LINUX_BSG_H
 	memset(&io_v4, 0, sizeof(struct sg_io_v4));
 	io_v4.guard = 'Q';
 	io_v4.protocol = BSG_PROTOCOL_SCSI;
@@ -171,6 +186,9 @@ static int disk_identify_command(int	  fd,
 	if (ret != 0) {
 		/* could be that the driver doesn't do version 4, try version 3 */
 		if (errno == EINVAL) {
+#else /* !HAVE_LINUX_BSG_H */
+		{
+#endif /* !HAVE_LINUX_BSG_H */
 			struct sg_io_hdr io_hdr;
 
 			memset(&io_hdr, 0, sizeof(struct sg_io_hdr));
@@ -187,6 +205,7 @@ static int disk_identify_command(int	  fd,
 			ret = ioctl(fd, SG_IO, &io_hdr);
 			if (ret != 0)
 				goto out;
+#ifdef HAVE_LINUX_BSG_H
 		} else {
 			goto out;
 		}
@@ -197,6 +216,9 @@ static int disk_identify_command(int	  fd,
 		ret = -1;
 		goto out;
 	}
+#else /* !HAVE_LINUX_BSG_H */
+		}
+#endif /* !HAVE_LINUX_BSG_H */
 
  out:
 	return ret;
@@ -206,7 +228,9 @@ static int disk_identify_packet_device_command(int	  fd,
 					       void	 *buf,
 					       size_t	  buf_len)
 {
+#ifdef HAVE_LINUX_BSG_H
 	struct sg_io_v4 io_v4;
+#endif /* HAVE_LINUX_BSG_H */
 	uint8_t cdb[16];
 	uint8_t sense[32];
 	uint8_t *desc = sense+8;
@@ -238,6 +262,7 @@ static int disk_identify_packet_device_command(int	  fd,
 	cdb[15] = 0;			/* CONTROL */
 	memset(sense, 0, sizeof(sense));
 
+#ifdef HAVE_LINUX_BSG_H
 	memset(&io_v4, 0, sizeof(struct sg_io_v4));
 	io_v4.guard = 'Q';
 	io_v4.protocol = BSG_PROTOCOL_SCSI;
@@ -254,6 +279,9 @@ static int disk_identify_packet_device_command(int	  fd,
 	if (ret != 0) {
 		/* could be that the driver doesn't do version 4, try version 3 */
 		if (errno == EINVAL) {
+#else /* !HAVE_LINUX_BSG_H */
+		{
+#endif /* !HAVE_LINUX_BSG_H */
 			struct sg_io_hdr io_hdr;
 
 			memset(&io_hdr, 0, sizeof(struct sg_io_hdr));
@@ -270,6 +298,7 @@ static int disk_identify_packet_device_command(int	  fd,
 			ret = ioctl(fd, SG_IO, &io_hdr);
 			if (ret != 0)
 				goto out;
+#ifdef HAVE_LINUX_BSG_H
 		} else {
 			goto out;
 		}
@@ -280,6 +309,9 @@ static int disk_identify_packet_device_command(int	  fd,
 		ret = -1;
 		goto out;
 	}
+#else /* !HAVE_LINUX_BSG_H */
+		}
+#endif /* !HAVE_LINUX_BSG_H */
 
  out:
 	return ret;

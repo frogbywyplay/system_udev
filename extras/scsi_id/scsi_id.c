@@ -55,7 +55,11 @@ static int all_good;
 static int dev_specified;
 static char config_file[MAX_PATH_LEN] = SYSCONFDIR "/scsi_id.config";
 static enum page_code default_page_code;
+#ifdef HAVE_LINUX_BSG_H
 static int sg_version = 4;
+#else /* !HAVE_LINUX_BSG_H */
+static int sg_version = 3;
+#endif /* HAVE_LINUX_BSG_H */
 static int use_stderr;
 static int debug;
 static int reformat_serial;
@@ -407,6 +411,12 @@ static int set_options(struct udev *udev,
 				err(udev, "Unknown SG version '%s'\n", optarg);
 				return -1;
 			}
+#ifndef HAVE_LINUX_BSG_H
+		if (sg_version == 4) {
+			err(udev, "SG version 4 is not supported on this system - fallback to version 3\n");
+			sg_version = 3;
+		}
+#endif /* !HAVE_LINUX_BSG_H */
 			break;
 
 		case 'u':

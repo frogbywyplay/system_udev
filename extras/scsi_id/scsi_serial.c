@@ -32,7 +32,9 @@
 #include <scsi/scsi.h>
 #include <scsi/sg.h>
 #include <linux/types.h>
+#ifdef HAVE_LINUX_BSG_H
 #include <linux/bsg.h>
+#endif
 
 #include "libudev.h"
 #include "libudev-private.h"
@@ -162,6 +164,8 @@ static int sg_err_category3(struct udev *udev, struct sg_io_hdr *hp)
 				   hp->sbp, hp->sb_len_wr);
 }
 
+#ifdef HAVE_LINUX_BSG_H
+
 static int sg_err_category4(struct udev *udev, struct sg_io_v4 *hp)
 {
 	return sg_err_category_new(udev, hp->device_status, 0,
@@ -169,6 +173,8 @@ static int sg_err_category4(struct udev *udev, struct sg_io_v4 *hp)
 				   (unsigned char *)(uintptr_t)hp->response,
 				   hp->response_len);
 }
+
+#endif /* HAVE_LINUX_BSG_H */
 
 static int scsi_dump_sense(struct udev *udev,
 			   struct scsi_id_device *dev_scsi,
@@ -291,6 +297,8 @@ static int scsi_dump(struct udev *udev,
 		return -1;
 }
 
+#ifdef HAVE_LINUX_BSG_H
+
 static int scsi_dump_v4(struct udev *udev,
 			struct scsi_id_device *dev_scsi, struct sg_io_v4 *io)
 {
@@ -313,6 +321,8 @@ static int scsi_dump_v4(struct udev *udev,
 		return -1;
 }
 
+#endif /* HAVE_LINUX_BSG_H */
+
 static int scsi_inquiry(struct udev *udev,
 			struct scsi_id_device *dev_scsi, int fd,
 			unsigned char evpd, unsigned char page,
@@ -322,7 +332,9 @@ static int scsi_inquiry(struct udev *udev,
 		{ INQUIRY_CMD, evpd, page, 0, buflen, 0 };
 	unsigned char sense[SENSE_BUFF_LEN];
 	void *io_buf;
+#ifdef HAVE_LINUX_BSG_H
 	struct sg_io_v4 io_v4;
+#endif /* HAVE_LINUX_BSG_H */
 	struct sg_io_hdr io_hdr;
 	int retry = 3; /* rather random */
 	int retval;
@@ -335,6 +347,7 @@ static int scsi_inquiry(struct udev *udev,
 resend:
 	dbg(udev, "%s evpd %d, page 0x%x\n", dev_scsi->kernel, evpd, page);
 
+#ifdef HAVE_LINUX_BSG_H
 	if (dev_scsi->use_sg == 4) {
 		memset(&io_v4, 0, sizeof(struct sg_io_v4));
 		io_v4.guard = 'Q';
@@ -348,6 +361,7 @@ resend:
 		io_v4.din_xferp = (uintptr_t)buf;
 		io_buf = (void *)&io_v4;
 	} else {
+#endif /* HAVE_LINUX_BSG_H */
 		memset(&io_hdr, 0, sizeof(struct sg_io_hdr));
 		io_hdr.interface_id = 'S';
 		io_hdr.cmd_len = sizeof(inq_cmd);
@@ -359,21 +373,27 @@ resend:
 		io_hdr.sbp = sense;
 		io_hdr.timeout = DEF_TIMEOUT;
 		io_buf = (void *)&io_hdr;
+#ifdef HAVE_LINUX_BSG_H
 	}
+#endif /* HAVE_LINUX_BSG_H */
 
 	retval = ioctl(fd, SG_IO, io_buf);
 	if (retval < 0) {
+#ifdef HAVE_LINUX_BSG_H
 		if ((errno == EINVAL || errno == ENOSYS) && dev_scsi->use_sg == 4) {
 			dev_scsi->use_sg = 3;
 			goto resend;
 		}
+#endif /* HAVE_LINUX_BSG_H */
 		info(udev, "%s: ioctl failed: %s\n", dev_scsi->kernel, strerror(errno));
 		goto error;
 	}
 
+#ifdef HAVE_LINUX_BSG_H
 	if (dev_scsi->use_sg == 4)
 		retval = sg_err_category4(udev, io_buf);
 	else
+#endif /* HAVE_LINUX_BSG_H */
 		retval = sg_err_category3(udev, io_buf);
 
 	switch (retval) {
@@ -386,9 +406,11 @@ resend:
 			break;
 
 		default:
+#ifdef HAVE_LINUX_BSG_H
 			if (dev_scsi->use_sg == 4)
 				retval = scsi_dump_v4(udev, dev_scsi, io_buf);
 			else
+#endif /* HAVE_LINUX_BSG_H */
 				retval = scsi_dump(udev, dev_scsi, io_buf);
 	}
 
