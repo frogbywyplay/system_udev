@@ -112,8 +112,11 @@ err:
 }
 
 int libudev_compat_pipe2(int pipefd[2], int flags) {
-  if (pipe2(pipefd, flags) != -1 || errno != ENOSYS)
-		return -1;
+  int res;
+
+  res = pipe2(pipefd, flags);
+	if (res != -1 || errno != ENOSYS)
+		return res;
 
 	if ((flags & ~(O_NONBLOCK | O_CLOEXEC)) != 0) {
 		errno = EINVAL;
