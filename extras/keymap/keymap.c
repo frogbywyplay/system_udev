@@ -38,6 +38,10 @@
 
 const struct key* lookup_key (const char *str, unsigned int len);
 
+#ifndef KEY_CNT
+# define KEY_CNT (KEY_MAX + 1)
+#endif
+
 #include "keys-from-name.h"
 #include "keys-to-name.h"
 
