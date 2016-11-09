@@ -566,6 +566,28 @@ int udev_device_read_db(struct udev_device *udev_device, const char *dbfile)
 	return 0;
 }
 
+static void udev_device_read_dev_file(struct udev_device *udev_device)
+{
+	char filename[UTIL_PATH_SIZE];
+	FILE *f;
+	char line[UTIL_LINE_SIZE];
+	int maj;
+	int min;
+
+	/* No `dev' attribute file is present if it's not a block/char device. */
+	util_strscpyl(filename, sizeof(filename), udev_device->syspath, "/dev", NULL);
+	f = fopen(filename, "re");
+	if (f == NULL)
+		return;
+	if (fgets(line, sizeof(line), f) == NULL)
+		goto out;
+	if (sscanf(line, "%i:%i", &maj, &min) != 2)
+		goto out;
+	udev_device_set_devnum(udev_device, makedev(maj, min));
+out:
+	fclose(f);
+}
+
 int udev_device_read_uevent_file(struct udev_device *udev_device)
 {
 	char filename[UTIL_PATH_SIZE];
@@ -579,9 +601,19 @@ int udev_device_read_uevent_file(struct udev_device *udev_device)
 
 	util_strscpyl(filename, sizeof(filename), udev_device->syspath, "/uevent", NULL);
 	f = fopen(filename, "re");
-	if (f == NULL)
+	if (f == NULL && errno != EACCES)
 		return -1;
 	udev_device->uevent_loaded = true;
+
+	/* With older kernels, some subsystems may only register a class device not a
+	 * standard device. Consequently, the `uevent' file is write-only. That will
+	 * cause fopen() to return a EACCES error. In this case, we try to gather as
+	 * much information from the class device's entry. Presently, the only
+	 * available information is the device number (major/minor). */
+	if (f == NULL) {
+		udev_device_read_dev_file(udev_device);
+		return 0;
+  }
 
 	while (fgets(line, sizeof(line), f)) {
 		char *pos;
