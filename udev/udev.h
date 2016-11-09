@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <sys/param.h>
 #include <signal.h>
+#include <stdarg.h>
 
 #include "libudev.h"
 #include "libudev-private.h"
@@ -62,6 +63,10 @@ struct udev_watch {
 	int handle;
 	char *name;
 };
+
+/* udev-log.c */
+void udev_klog(const char *format,...);
+void udev_vklog(const char *format, va_list args);
 
 /* udev-rules.c */
 struct udev_rules;

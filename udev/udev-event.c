@@ -826,22 +826,8 @@ out:
 
 static void rename_netif_kernel_log(struct ifreq ifr)
 {
-	int klog;
-	FILE *f;
-
-	klog = open("/dev/kmsg", O_WRONLY);
-	if (klog < 0)
-		return;
-
-	f = fdopen(klog, "w");
-	if (f == NULL) {
-		close(klog);
-		return;
-	}
-
-	fprintf(f, "<30>udevd[%u]: renamed network interface %s to %s\n",
+	udev_klog("<30>udevd[%u]: renamed network interface %s to %s\n",
 		getpid(), ifr.ifr_name, ifr.ifr_newname);
-	fclose(f);
 }
 
 static int rename_netif(struct udev_event *event)

@@ -1062,11 +1062,7 @@ static int convert_db(struct udev *udev)
 	if (access(filename, F_OK) < 0)
 		return 0;
 
-	f = fopen("/dev/kmsg", "w");
-	if (f != NULL) {
-		fprintf(f, "<30>udevd[%u]: converting old udev database\n", getpid());
-		fclose(f);
-	}
+	udev_klog("<30>udevd[%u]: converting old udev database\n", getpid());
 
 	udev_enumerate = udev_enumerate_new(udev);
 	if (udev_enumerate == NULL)
@@ -1444,11 +1440,7 @@ int main(int argc, char *argv[])
 		sd_notify(1, "READY=1");
 	}
 
-	f = fopen("/dev/kmsg", "w");
-	if (f != NULL) {
-		fprintf(f, "<30>udevd[%u]: starting version " VERSION "\n", getpid());
-		fclose(f);
-	}
+	udev_klog("<30>udevd[%u]: starting version " VERSION "\n", getpid());
 
 	if (!debug) {
 		int fd;

@@ -163,6 +163,7 @@ libexec_PROGRAMS = \
 udev_common_sources =\
 	udev/udev.h \
 	udev/udev-event.c \
+	udev/udev-log.c \
 	udev/udev-watch.c \
 	udev/udev-node.c \
 	udev/udev-rules.c \
