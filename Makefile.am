@@ -294,7 +294,11 @@ dist_udevrules_DATA += extras/v4l_id/60-persistent-v4l.rules
 # accelerometer - updates device orientation
 # ------------------------------------------------------------------------------
 extras_accelerometer_accelerometer_SOURCES = extras/accelerometer/accelerometer.c
-extras_accelerometer_accelerometer_LDADD = libudev/libudev-private.la -lm
+# We use -Xlinker to prevent libtool to reorder link options.
+extras_accelerometer_accelerometer_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	-Xlinker --no-as-needed -Xlinker -lm -Xlinker --as-needed
+extras_accelerometer_accelerometer_LDADD = libudev/libudev-private.la
 libexec_PROGRAMS += extras/accelerometer/accelerometer
 dist_udevrules_DATA += extras/accelerometer/61-accelerometer.rules
 
