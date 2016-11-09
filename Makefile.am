@@ -64,7 +64,8 @@ libudev_libudev_la_SOURCES =\
 
 libudev_libudev_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
-	-version-info $(LIBUDEV_CURRENT):$(LIBUDEV_REVISION):$(LIBUDEV_AGE)
+	-version-info $(LIBUDEV_CURRENT):$(LIBUDEV_REVISION):$(LIBUDEV_AGE) \
+	-lrt
 
 noinst_LTLIBRARIES = \
 	libudev/libudev-private.la
@@ -176,6 +177,9 @@ udev_udevd_SOURCES = \
 	udev/udevd.c \
 	udev/sd-daemon.h \
 	udev/sd-daemon.c
+udev_udevd_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	-lrt
 udev_udevd_LDADD = libudev/libudev-private.la
 
 udev_udevadm_SOURCES = \
@@ -188,6 +192,9 @@ udev_udevadm_SOURCES = \
 	udev/udevadm-trigger.c \
 	udev/udevadm-test.c \
 	udev/udevadm-test-builtin.c
+udev_udevadm_LDFLAGS = \
+	$(AM_LDFLAGS) \
+	-lrt
 udev_udevadm_LDADD = libudev/libudev-private.la
 
 # ------------------------------------------------------------------------------
