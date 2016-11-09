@@ -772,6 +772,7 @@ UDEV_EXPORT struct udev_device *udev_device_new_from_devnum(struct udev *udev, c
 {
 	char path[UTIL_PATH_SIZE];
 	const char *type_str;
+	struct stat statbuf;
 
 	if (type == 'b')
 		type_str = "block";
@@ -783,7 +784,41 @@ UDEV_EXPORT struct udev_device *udev_device_new_from_devnum(struct udev *udev, c
 	/* use /sys/dev/{block,char}/<maj>:<min> link */
 	snprintf(path, sizeof(path), "%s/dev/%s/%u:%u",
 		 udev_get_sys_path(udev), type_str, major(devnum), minor(devnum));
-	return udev_device_new_from_syspath(udev, path);
+	if (stat(path, &statbuf) == 0)
+		return udev_device_new_from_syspath(udev, path);
+
+	/* use /run/udev/dev/{block,char}/<maj>:<min> link */
+	snprintf(path, sizeof(path), "%s/dev/%s/%u:%u",
+		 udev_get_run_path(udev), type_str, major(devnum), minor(devnum));
+	if (stat(path, &statbuf) == 0) {
+		struct udev_device *udev_device;
+		char sysfs_path[UTIL_PATH_SIZE];
+		ssize_t len;
+
+		/* resolve to path in sysfs */
+		len = readlink(path, sysfs_path, sizeof(sysfs_path));
+		if (len <= 0 || len == (ssize_t)sizeof(sysfs_path)) {
+			err(udev, "cannot readlink %s: %m\n", path);
+			return NULL;
+		}
+		sysfs_path[len] = '\0';
+
+		udev_device = udev_device_new_from_syspath(udev, sysfs_path);
+		if (udev_device == NULL)
+			return NULL;
+
+		/* ensure the link points to the right device - that should not happen but
+		 * let's be safe */
+		if (udev_device_get_devnum(udev_device) != devnum) {
+			err(udev, "invalid link %s to %s\n", path, sysfs_path);
+			udev_device_unref(udev_device);
+			return NULL;
+		}
+
+		return udev_device;
+	}
+
+	return NULL;
 }
 
 struct udev_device *udev_device_new_from_id_filename(struct udev *udev, char *id)

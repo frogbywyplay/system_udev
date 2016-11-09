@@ -9,6 +9,7 @@
  * version 2.1 of the License, or (at your option) any later version.
  */
 
+#include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,6 +18,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 
 #include "libudev.h"
@@ -191,5 +193,106 @@ int udev_device_delete_db(struct udev_device *udev_device)
 		return -1;
 	util_strscpyl(filename, sizeof(filename), udev_get_run_path(udev), "/data/", id, NULL);
 	unlink(filename);
+	return 0;
+}
+
+static int udev_device_sysfs_dev_link_from_id_filename(
+    struct udev_device *udev_device, char *sysfs_filename, size_t size)
+{
+	struct udev *udev = udev_device_get_udev(udev_device);
+	const char *id;
+
+	id = udev_device_get_id_filename(udev_device);
+	if (id == NULL)
+		return -1;
+	if (id[0] != 'b' && id[0] != 'c')
+		return -1;
+	util_strscpyl(sysfs_filename, size, udev_get_sys_path(udev),
+				"/dev/", (id[0] == 'b' ? "block" : "char"), "/", &id[1], NULL);
+	return 0;
+}
+
+static int udev_device_dev_link_from_id_filename(
+    struct udev_device *udev_device, char *filename, size_t size)
+{
+	struct udev *udev = udev_device_get_udev(udev_device);
+	const char *id;
+
+	id = udev_device_get_id_filename(udev_device);
+	if (id == NULL)
+		return -1;
+	if (id[0] != 'b' && id[0] != 'c')
+		return -1;
+	util_strscpyl(filename, UTIL_PATH_SIZE, udev_get_run_path(udev),
+				"/dev/", (id[0] == 'b' ? "block" : "char"), "/", &id[1], NULL);
+	return 0;
+}
+
+int udev_device_need_dev_link(struct udev_device *udev_device)
+{
+	char sysfs_filename[UTIL_PATH_SIZE];
+	struct stat statbuf;
+
+	if (udev_device_sysfs_dev_link_from_id_filename(udev_device, sysfs_filename,
+        sizeof(sysfs_filename)) != 0)
+		return 0;
+	return (stat(sysfs_filename, &statbuf) != 0);
+}
+
+int udev_device_create_dev_link(struct udev_device *udev_device)
+{
+	struct udev *udev = udev_device_get_udev(udev_device);
+	char filename[UTIL_PATH_SIZE];
+	const char *syspath = udev_device_get_syspath(udev_device);
+	struct stat statbuf;
+
+	if (udev_device_dev_link_from_id_filename(udev_device, filename,
+        sizeof(filename)) != 0)
+		return -1;
+
+	if (lstat(filename, &statbuf) == 0 && S_ISLNK(statbuf.st_mode)) {
+		char buf[UTIL_PATH_SIZE];
+		ssize_t len;
+
+		dbg(udev, "found existing symlink '%s'\n", filename);
+		len = readlink(filename, buf, sizeof(buf));
+		if (len > 0 && len < (ssize_t)sizeof(buf)) {
+			buf[len] = '\0';
+			if (strcmp(buf, syspath) == 0) {
+				info(udev, "preserve already existing symlink '%s' to '%s'\n",
+						filename, syspath);
+				return 0;
+			}
+		}
+	}
+
+	info(udev, "create symlink '%s' to '%s'\n", filename, syspath);
+	if (unlink(filename) != 0 && errno != ENOENT) {
+		err(udev, "unlink(%s) failed: %m\n", filename);
+		return -1;
+	}
+	if (util_create_path(udev, filename) != 0) {
+		err(udev, "util_create_path(%s) failed\n", filename);
+		return -1;
+	}
+	if (symlink(syspath, filename) != 0) {
+		err(udev, "symlink(%s,%s) failed: %m\n", syspath, filename);
+		return -1;
+	}
+	return 0;
+}
+
+int udev_device_delete_dev_link(struct udev_device *udev_device)
+{
+	struct udev *udev = udev_device_get_udev(udev_device);
+	char filename[UTIL_PATH_SIZE];
+
+	if (udev_device_dev_link_from_id_filename(udev_device, filename,
+        sizeof(filename)) != 0)
+		return -1;
+	if (unlink(filename) != 0 && errno != ENOENT) {
+		err(udev, "unlink(%s) failed: %m\n", filename);
+		return -1;
+	}
 	return 0;
 }

@@ -926,6 +926,7 @@ int udev_event_execute_rules(struct udev_event *event, struct udev_rules *rules,
 	if (strcmp(udev_device_get_action(dev), "remove") == 0) {
 		udev_device_read_db(dev, NULL);
 		udev_device_delete_db(dev);
+		udev_device_delete_dev_link(dev);
 		udev_device_tag_index(dev, NULL, false);
 
 		if (major(udev_device_get_devnum(dev)) != 0)
@@ -945,6 +946,9 @@ int udev_event_execute_rules(struct udev_event *event, struct udev_rules *rules,
 			if (major(udev_device_get_devnum(dev)) != 0)
 				udev_watch_end(event->udev, event->dev_db);
 		}
+
+		if (udev_device_need_dev_link(dev))
+			udev_device_create_dev_link(dev);
 
 		udev_rules_apply_to_event(rules, event, sigmask);
 
@@ -996,6 +1000,7 @@ int udev_event_execute_rules(struct udev_event *event, struct udev_rules *rules,
 			}
 
 			if (event->name == NULL || event->name[0] == '\0') {
+				udev_device_delete_dev_link(dev);
 				udev_device_delete_db(dev);
 				udev_device_tag_index(dev, NULL, false);
 				udev_device_unref(event->dev_db);
