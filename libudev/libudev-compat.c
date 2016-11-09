@@ -61,9 +61,11 @@ err:
 int libudev_compat_epoll_create1(int flags) {
   int fd;
 
+#ifdef HAVE_EPOLL_CREATE1
   fd = epoll_create1(flags);
   if (fd != -1 || errno != ENOSYS)
 		return fd;
+#endif /* HAVE_EPOLL_CREATE1 */
 
 	fd = epoll_create(1);
 	if (fd == -1)
@@ -86,9 +88,11 @@ err:
 int libudev_compat_inotify_init1(int flags) {
   int fd;
 
+#ifdef HAVE_INOTIFY_INIT1
   fd = inotify_init1(flags);
   if (fd != -1 || errno != ENOSYS)
 		return fd;
+#endif /* HAVE_INOTIFY_INIT1 */
 
 	fd = inotify_init();
 	if (fd == -1)
@@ -114,9 +118,11 @@ err:
 int libudev_compat_pipe2(int pipefd[2], int flags) {
   int res;
 
+#ifdef HAVE_PIPE2
   res = pipe2(pipefd, flags);
 	if (res != -1 || errno != ENOSYS)
 		return res;
+#endif /* HAVE_PIPE2 */
 
 	if ((flags & ~(O_NONBLOCK | O_CLOEXEC)) != 0) {
 		errno = EINVAL;

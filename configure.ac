@@ -207,7 +207,7 @@ AC_CHECK_HEADERS([linux/bsg.h])
 AC_CHECK_DECLS([accept4], [], [],
        [[#include <sys/types.h>
          #include <sys/socket.h>]])
-AC_CHECK_FUNCS([accept4])
+AC_CHECK_FUNCS([accept4 epoll_create1 inotify_init1 pipe2])
 
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_FILES([
