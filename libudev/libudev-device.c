@@ -1177,13 +1177,19 @@ UDEV_EXPORT const char *udev_device_get_devnode(struct udev_device *udev_device)
 	}
 
 	/* we might get called before we handled an event and have a db, use the kernel-provided name */
-	if (udev_device->devnode == NULL && udev_device_get_knodename(udev_device) != NULL) {
-		char filename[UTIL_NAME_SIZE];
-
-		util_strscpyl(filename, sizeof(filename), udev_get_dev_path(udev_device->udev), "/",
-			      udev_device_get_knodename(udev_device), NULL);
-		udev_device_set_devnode(udev_device, filename);
-		return udev_device->devnode;
+	if (udev_device->devnode == NULL) {
+		if (udev_device_get_knodename(udev_device) != NULL) {
+			char filename[UTIL_NAME_SIZE];
+			util_strscpyl(filename, sizeof(filename), udev_get_dev_path(udev_device->udev), "/",
+							udev_device_get_knodename(udev_device), NULL);
+			udev_device_set_devnode(udev_device, filename);
+		}
+		else if (major(udev_device_get_devnum(udev_device)) > 0) {
+			char filename[UTIL_NAME_SIZE];
+			util_strscpyl(filename, sizeof(filename), udev_get_dev_path(udev_device->udev), "/",
+							udev_device_get_sysname(udev_device), NULL);
+			udev_device_set_devnode(udev_device, filename);
+		}
 	}
 
 	return udev_device->devnode;
