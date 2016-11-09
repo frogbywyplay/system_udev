@@ -22,9 +22,10 @@ AM_CFLAGS = \
 	-ffunction-sections \
 	-fdata-sections
 
-AM_LDFLAGS = \
-	-Wl,--gc-sections \
-	-Wl,--as-needed
+AM_LDFLAGS = -Wl,--as-needed
+if ! ON_MIPS
+AM_LDFLAGS += -Wl,--gc-sections
+endif
 
 DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-gtk-doc \

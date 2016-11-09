@@ -71,6 +71,9 @@ AC_ARG_WITH([systemdsystemunitdir],
 AS_IF([test "x$with_systemdsystemunitdir" != "xno"], [ AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir]) ])
 AM_CONDITIONAL(WITH_SYSTEMD, [test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != "xno" ])
 
+# remove -Wl,--gc-sections on mips to avoid a crash of the linker
+AM_CONDITIONAL([ON_MIPS], [test "x$ARCH" = "xmips"])
+
 # ------------------------------------------------------------------------------
 # GUdev - libudev gobject interface
 # ------------------------------------------------------------------------------
