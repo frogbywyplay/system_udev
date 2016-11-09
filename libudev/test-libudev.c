@@ -21,6 +21,7 @@
 #include <sys/epoll.h>
 
 #include "libudev.h"
+#include "libudev-compat.h"
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 

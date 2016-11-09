@@ -58,7 +58,8 @@ libudev_libudev_la_SOURCES =\
 	libudev/libudev-device.c \
 	libudev/libudev-enumerate.c \
 	libudev/libudev-monitor.c \
-	libudev/libudev-queue.c
+	libudev/libudev-queue.c \
+	libudev/libudev-compat.c
 
 libudev_libudev_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
@@ -222,7 +223,7 @@ check_PROGRAMS = \
 	udev/test-udev
 
 libudev_test_libudev_SOURCES = libudev/test-libudev.c
-libudev_test_libudev_LDADD = libudev/libudev.la
+libudev_test_libudev_LDADD = libudev/libudev.la libudev/libudev-private.la
 
 udev_test_udev_SOURCES = \
 	$(udev_common_sources) \
