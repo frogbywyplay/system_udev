@@ -6,11 +6,11 @@ AC_INIT([udev],
 	[http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html])
 AC_CONFIG_SRCDIR([udev/udevd.c])
 AC_CONFIG_AUX_DIR([build-aux])
-AM_INIT_AUTOMAKE([check-news foreign 1.11 -Wall -Wno-portability silent-rules tar-pax dist-bzip2 subdir-objects])
+AM_INIT_AUTOMAKE([foreign])
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 AC_CONFIG_MACRO_DIR([m4])
-AM_SILENT_RULES([yes])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 LT_INIT([disable-static])
 AC_PROG_AWK
 GTK_DOC_CHECK(1.10)
