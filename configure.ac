@@ -201,6 +201,10 @@ AM_CONDITIONAL([ENABLE_EDD], [test "x$enable_edd" = "xyes"])
 # Compatibility with older Linux kernels and C libraries.
 # ------------------------------------------------------------------------------
 AC_CHECK_HEADERS([linux/bsg.h])
+AC_CHECK_DECLS([accept4], [], [],
+       [[#include <sys/types.h>
+         #include <sys/socket.h>]])
+AC_CHECK_FUNCS([accept4])
 
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_FILES([

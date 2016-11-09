@@ -4,6 +4,11 @@
 #define LIBUDEV_COMPAT_DISABLE_RENAMING
 #include "libudev-compat.h"
 
+#if defined(HAVE_ACCEPT4) && !HAVE_DECL_ACCEPT4
+extern int accept4(int sockfd, struct sockaddr * addr, socklen_t * addrlen,
+        int flags);
+#endif /* HAVE_ACCEPT4 and !HAVE_DECL_ACCEPT4 */
+
 static int fd_set_non_blocking(int fd) {
 	long flags;
 
@@ -26,9 +31,11 @@ int libudev_compat_accept4(int sockfd, struct sockaddr *addr,
 		socklen_t *addrlen, int flags) {
   int fd;
 
+#ifdef HAVE_ACCEPT4
   fd = accept4(sockfd, addr, addrlen, flags);
   if (fd != -1 || errno != ENOSYS)
 		return fd;
+#endif /* HAVE_ACCEPT4 */
 
 	fd = accept(sockfd, addr, addrlen);
 	if (fd == -1)
