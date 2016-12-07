@@ -185,7 +185,7 @@ udev_udevd_LDADD = libudev/libudev-private.la
 
 if WITH_LXC_GENESIS
 udev_udevd_CFLAGS = $(lxc_genesis_CFLAGS)
-udev_udevd_LDFLAGS = $(lxc_genesis_LIBS)
+udev_udevd_LDFLAGS += $(lxc_genesis_LIBS)
 endif
 
 if ENABLE_MKNODS
