@@ -1,3 +1,6 @@
+175.2 -- 07/12/2016
+- fix compilation on ALI harware when linking with lxc-genesis
+
 175.1 -- 14/11/2016
 - Add a whitelist for nodes & rules.
 - Add "mknods", a statically configured udevadm (to limit its usage)
