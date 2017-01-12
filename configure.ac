@@ -51,7 +51,7 @@ AM_CONDITIONAL(WITH_LXC_GENESIS, [test "x$with_lxc_genesis" = "xyes"])
 AC_ARG_ENABLE([whitelist],
 	AS_HELP_STRING([--enable-whitelist], [enable whitelist on nodes and rules @<:@default=disabled@:>@]),
 	[], [enable_whitelist=no])
-AS_IF([test "x$enable_whitelist" = "xyes"], [ AC_DEFINE(ENABLE_WHITELIST, [1], [Add a whitelist for nodes and rules.]) ])BLE_LOGGING,
+AS_IF([test "x$enable_whitelist" = "xyes"], [ AC_DEFINE(ENABLE_WHITELIST, [1], [Add a whitelist for nodes and rules.]) ])
 
 AC_ARG_ENABLE([debug],
 	AS_HELP_STRING([--enable-debug], [enable debug messages @<:@default=disabled@:>@]),
