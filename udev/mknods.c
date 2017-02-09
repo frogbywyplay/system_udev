@@ -73,26 +73,9 @@ int main(int argc, char *argv[])
 #endif
 	unsigned int i;
 	int rc = 1;
-	unsigned int attempt = 10;
-	struct stat buf;
+	unsigned int attempts = 10;
+	char filename[UTIL_PATH_SIZE];
 
-	fprintf(stderr, "wait /var/run/udev/control ...\n");
-
-	for (i = 0; i < attempt; ++i) {
-		if ((rc = stat("/var/run/udev/control", &buf)) == 0) {
-			break;
-		}
-
-		rc = errno;
-		sleep(1);
-	}
-
-	if (rc) {
-		fprintf(stderr, "missing /var/run/udev/control: %s\n", strerror(rc));
-		return rc;
-	}
-
-	rc = 1;
 	udev = udev_new();
 	if (udev == NULL)
 		goto out;
@@ -120,12 +103,27 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	info(udev, "runtime dir '%s'\n", udev_get_run_path(udev));
-        rc = 0;
-        for (i = 0; i < ARGUMENTS_SIZE; ++i) {
-                optind = 0;
-                rc |= run_command(udev, mknods_arguments[i].cmd, mknods_arguments[i].argc, (char **)mknods_arguments[i].argv);
-        }
+	util_strscpyl(filename, sizeof(filename), udev_get_run_path(udev), "/control", NULL);
+	fprintf(stderr, "waiting for %s...\n", filename);
+
+	for (i = 0; i < attempts; ++i) {
+		if (access(filename, F_OK) == 0) {
+			rc = 0;
+			break;
+		}
+		rc = errno;
+		sleep(1);
+	}
+
+	if (rc) {
+		fprintf(stderr, "missing %s: %s\n", filename, strerror(rc));
+		return rc;
+	}
+
+	for (i = 0; i < ARGUMENTS_SIZE; ++i) {
+		optind = 0;
+		rc |= run_command(udev, mknods_arguments[i].cmd, mknods_arguments[i].argc, (char **)mknods_arguments[i].argv);
+	}
 
 	if (kill(1, SIGHUP) != 0) {
 		info(udev, "cannot do kill -HUP 1; %s\n", strerror(errno));

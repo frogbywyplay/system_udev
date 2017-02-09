@@ -73,8 +73,7 @@ noinst_LTLIBRARIES = \
 libudev_libudev_private_la_SOURCES =\
 	$(libudev_libudev_la_SOURCES) \
 	libudev/libudev-util-private.c \
-	libudev/libudev-device-private.c \
-	libudev/libudev-queue-private.c
+	libudev/libudev-device-private.c
 
 if WITH_SELINUX
 libudev_libudev_private_la_SOURCES += libudev/libudev-selinux-private.c

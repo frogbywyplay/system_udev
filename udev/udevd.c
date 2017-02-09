@@ -68,7 +68,6 @@ static void log_fn(struct udev *udev, int priority,
 }
 
 static struct udev_rules *rules;
-static struct udev_queue_export *udev_queue_export;
 static struct udev_ctrl *udev_ctrl;
 static struct udev_monitor *monitor;
 static int worker_watch[2] = { -1, -1 };
@@ -150,14 +149,9 @@ static struct worker *node_to_worker(struct udev_list_node *node)
 	return (struct worker *)worker;
 }
 
-static void event_queue_delete(struct event *event, bool export)
+static void event_queue_delete(struct event *event)
 {
 	udev_list_node_remove(&event->node);
-
-	if (export) {
-		udev_queue_export_device_finished(udev_queue_export, event->dev);
-		info(event->udev, "seq %llu done with %i\n", udev_device_get_seqnum(event->dev), event->exitcode);
-	}
 	udev_device_unref(event->dev);
 	free(event);
 }
@@ -236,7 +230,6 @@ static void worker_new(struct event *event)
 		free(worker);
 		worker_list_cleanup(udev);
 		event_queue_cleanup(udev, EVENT_UNDEF);
-		udev_queue_export_unref(udev_queue_export);
 		udev_monitor_unref(monitor);
 		udev_ctrl_unref(udev_ctrl);
 		close(fd_signal);
@@ -451,7 +444,6 @@ static int event_queue_insert(struct udev_device *dev)
 	event->is_block = (strcmp("block", udev_device_get_subsystem(dev)) == 0);
 	event->ifindex = udev_device_get_ifindex(dev);
 
-	udev_queue_export_device_queued(udev_queue_export, dev);
 	info(event->udev, "seq %llu queued, '%s' '%s'\n", udev_device_get_seqnum(dev),
 	     udev_device_get_action(dev), udev_device_get_subsystem(dev));
 
@@ -594,7 +586,7 @@ static void event_queue_cleanup(struct udev *udev, enum event_state match_type)
 		if (match_type != EVENT_UNDEF && match_type != event->state)
 			continue;
 
-		event_queue_delete(event, false);
+		event_queue_delete(event);
 	}
 }
 
@@ -618,7 +610,7 @@ static void worker_returned(int fd_worker)
 
 			/* worker returned */
 			worker->event->exitcode = msg.exitcode;
-			event_queue_delete(worker->event, true);
+			event_queue_delete(worker->event);
 			worker->event = NULL;
 			if (worker->state != WORKER_KILLED)
 				worker->state = WORKER_IDLE;
@@ -820,7 +812,8 @@ static void handle_signal(struct udev *udev, int signo)
 						err(udev, "worker [%u] failed while handling '%s'\n",
 						    pid, worker->event->devpath);
 						worker->event->exitcode = -32;
-						event_queue_delete(worker->event, true);
+						event_queue_delete(worker->event);
+
 						/* drop reference taken for state 'running' */
 						worker_unref(worker);
 					}
@@ -1186,6 +1179,7 @@ int main(int argc, char *argv[])
 	int fd_worker = -1;
 	struct epoll_event ep_ctrl, ep_inotify, ep_signal, ep_netlink, ep_worker;
 	struct udev_ctrl_connection *ctrl_conn = NULL;
+	char queue_filename[UTIL_PATH_SIZE] = { '\0' };
 	int rc = 1;
 
 	udev = udev_new();
@@ -1392,14 +1386,7 @@ int main(int argc, char *argv[])
 		goto exit;
 	}
 
-	udev_monitor_set_receive_buffer_size(monitor, 128*1024*1024);
-
-	/* create queue file before signalling 'ready', to make sure we block 'settle' */
-	udev_queue_export = udev_queue_export_new(udev);
-	if (udev_queue_export == NULL) {
-		err(udev, "error creating queue file\n");
-		goto exit;
-	}
+	udev_monitor_set_receive_buffer_size(monitor, 128 * 1024 * 1024);
 
 	if (daemonize) {
 		pid_t pid;
@@ -1562,6 +1549,7 @@ int main(int argc, char *argv[])
 
 	udev_list_node_init(&event_list);
 	udev_list_node_init(&worker_list);
+	util_strscpyl(queue_filename, sizeof(queue_filename), udev_get_run_path(udev), "/queue", NULL);
 
 	for (;;) {
 		struct epoll_event ev[8];
@@ -1592,7 +1580,7 @@ int main(int argc, char *argv[])
 			worker_kill(udev, 0);
 
 			/* exit after all has cleaned up */
-			if (udev_list_node_is_empty(&event_list) && udev_list_node_is_empty(&worker_list))
+			if (udev_list_node_is_empty(&event_list) && children == 0)
 				break;
 
 			/* timeout at exit for workers to finish */
@@ -1603,6 +1591,18 @@ int main(int argc, char *argv[])
 		} else {
 			timeout = -1;
 		}
+
+		/* tell settle that we are busy or idle */
+		if (!udev_list_node_is_empty(&event_list)) {
+			int fd;
+
+			fd = open(queue_filename, O_WRONLY|O_CREAT|O_CLOEXEC|O_TRUNC|O_NOFOLLOW, 0444);
+			if (fd >= 0)
+				close(fd);
+		} else {
+			unlink(queue_filename);
+		}
+
 		fdcount = epoll_wait(fd_ep, ev, ARRAY_SIZE(ev), timeout);
 		if (fdcount < 0)
 			continue;
@@ -1695,8 +1695,9 @@ int main(int argc, char *argv[])
 
 	rc = EXIT_SUCCESS;
 exit:
-	udev_queue_export_cleanup(udev_queue_export);
 	udev_ctrl_cleanup(udev_ctrl);
+	if (queue_filename[0] != '\0')
+		unlink(queue_filename);
 exit_daemonize:
 	if (fd_ep >= 0)
 		close(fd_ep);
@@ -1710,7 +1711,6 @@ exit_daemonize:
 	if (worker_watch[WRITE_END] >= 0)
 		close(worker_watch[WRITE_END]);
 	udev_monitor_unref(monitor);
-	udev_queue_export_unref(udev_queue_export);
 	udev_ctrl_connection_unref(ctrl_conn);
 	udev_ctrl_unref(udev_ctrl);
 	udev_selinux_exit(udev);
