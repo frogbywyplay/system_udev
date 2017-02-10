@@ -240,7 +240,7 @@ static void cleanup_db(struct udev *udev)
 	char filename[UTIL_PATH_SIZE];
 	DIR *dir;
 
-	util_strscpyl(filename, sizeof(filename), udev_get_run_path(udev), "/queue.bin", NULL);
+	util_strscpyl(filename, sizeof(filename), udev_get_run_path(udev), "/queue", NULL);
 	unlink(filename);
 
 	util_strscpyl(filename, sizeof(filename), udev_get_run_path(udev), "/data", NULL);

@@ -107,7 +107,7 @@ static int prepare(char *dir, char *filename)
 			fprintf(stderr, "Lock taken, wait for %d seconds\n", UDEV_ALARM_TIMEOUT);
 		if (errno == EAGAIN || errno == EACCES) {
 			alarm(UDEV_ALARM_TIMEOUT);
-			lockf(fd, F_LOCK, 0);
+			UDEV_IGNORE_VALUE(lockf(fd, F_LOCK, 0));
 			if (debug)
 				fprintf(stderr, "Acquired lock on %s\n", buf);
 		} else {
@@ -299,7 +299,7 @@ static int missing(int fd)
 				buf = tmpbuf;
 			}
 			snprintf(buf, strlen(him->name)+2, "%s ", him->name);
-			write(fd, buf, strlen(buf));
+			UDEV_IGNORE_VALUE(write(fd, buf, strlen(buf)));
 		}
 	}
 
@@ -457,10 +457,10 @@ int main(int argc, char **argv)
 	kickout();
 
 	lseek(fd, 0, SEEK_SET);
-	ftruncate(fd, 0);
+	UDEV_IGNORE_VALUE(ftruncate(fd, 0));
 	ret = missing(fd);
 
-	lockf(fd, F_ULOCK, 0);
+	UDEV_IGNORE_VALUE(lockf(fd, F_ULOCK, 0));
 	close(fd);
 out:
 	if (debug)

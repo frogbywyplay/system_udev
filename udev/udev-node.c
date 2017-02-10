@@ -61,7 +61,7 @@ int udev_node_mknod(struct udev_device *dev, const char *file, mode_t mode, uid_
 				mode |= stats.st_mode & 01000;
 				info(udev, "set permissions %s, %#o, uid=%u, gid=%u\n", file, mode, uid, gid);
 				chmod(file, mode);
-				chown(file, uid, gid);
+				UDEV_IGNORE_VALUE(chown(file, uid, gid));
 			} else {
 				info(udev, "preserve permissions %s, %#o, uid=%u, gid=%u\n", file, mode, uid, gid);
 			}
@@ -97,7 +97,7 @@ int udev_node_mknod(struct udev_device *dev, const char *file, mode_t mode, uid_
 			}
 			info(udev, "set permissions '%s' %#o uid=%u gid=%u\n", file, mode, uid, gid);
 			chmod(file, mode);
-			chown(file, uid, gid);
+			UDEV_IGNORE_VALUE(chown(file, uid, gid));
 		}
 	} else {
 		info(udev, "mknod '%s' %u:%u %#o\n", file, major(devnum), minor(devnum), mode);
@@ -115,7 +115,7 @@ int udev_node_mknod(struct udev_device *dev, const char *file, mode_t mode, uid_
 			err(udev, "mknod '%s' %u:%u %#o' failed: %m\n", file, major(devnum), minor(devnum), mode);
 		info(udev, "set permissions '%s' %#o uid=%u gid=%u\n", file, mode, uid, gid);
 		chmod(file, mode);
-		chown(file, uid, gid);
+		UDEV_IGNORE_VALUE(chown(file, uid, gid));
 	}
 exit:
 	return err;

@@ -918,8 +918,8 @@ static int copy_dev_dir(struct udev *udev, DIR *dir_from, DIR *dir_to, int maxde
 		if (S_ISBLK(stats.st_mode) || S_ISCHR(stats.st_mode)) {
 			udev_selinux_setfscreateconat(udev, dirfd(dir_to), dent->d_name, stats.st_mode & 0777);
 			if (mknodat(dirfd(dir_to), dent->d_name, stats.st_mode, stats.st_rdev) == 0) {
-				fchmodat(dirfd(dir_to), dent->d_name, stats.st_mode & 0777, 0);
-				fchownat(dirfd(dir_to), dent->d_name, stats.st_uid, stats.st_gid, 0);
+				UDEV_IGNORE_VALUE(fchmodat(dirfd(dir_to), dent->d_name, stats.st_mode & 0777, 0));
+				UDEV_IGNORE_VALUE(fchownat(dirfd(dir_to), dent->d_name, stats.st_uid, stats.st_gid, 0));
 			} else {
 				utimensat(dirfd(dir_to), dent->d_name, NULL, 0);
 			}
@@ -1044,7 +1044,6 @@ static int mem_size_mb(void)
 static int convert_db(struct udev *udev)
 {
 	char filename[UTIL_PATH_SIZE];
-	FILE *f;
 	struct udev_enumerate *udev_enumerate;
 	struct udev_list_entry *list_entry;
 
@@ -1318,7 +1317,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* set umask before creating any file/directory */
-	chdir("/");
+	UDEV_IGNORE_VALUE(chdir("/"));
 	umask(022);
 
 	/* create standard links, copy static nodes, create nodes from modules */
@@ -1429,11 +1428,11 @@ int main(int argc, char *argv[])
 				err(udev, "error disabling OOM: %m\n");
 			} else {
 				/* OOM_DISABLE == -17 */
-				write(fd, "-17", 3);
+				UDEV_IGNORE_VALUE(write(fd, "-17", 3));
 				close(fd);
 			}
 		} else {
-			write(fd, "-1000", 5);
+			UDEV_IGNORE_VALUE(write(fd, "-1000", 5));
 			close(fd);
 		}
 	} else {

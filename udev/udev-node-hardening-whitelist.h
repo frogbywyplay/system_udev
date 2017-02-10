@@ -14,7 +14,7 @@
 
 
 struct node_hardening_whitelist_t {
-	char  *path;
+	const char  *path;
 	mode_t mode;
 	int    major;
 	int    minor;

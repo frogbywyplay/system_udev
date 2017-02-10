@@ -121,7 +121,7 @@ void udev_watch_begin(struct udev *udev, struct udev_device *dev)
 	snprintf(filename, sizeof(filename), "%s/watch/%d", udev_get_run_path(udev), wd);
 	util_create_path(udev, filename);
 	unlink(filename);
-	symlink(udev_device_get_id_filename(dev), filename);
+	UDEV_IGNORE_VALUE(symlink(udev_device_get_id_filename(dev), filename));
 
 	udev_device_set_watch_handle(dev, wd);
 }

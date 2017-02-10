@@ -747,6 +747,7 @@ static int import_property_from_string(struct udev_device *dev, char *line)
 	return 0;
 }
 
+#ifndef ENABLE_WHITELIST
 static int import_file_into_properties(struct udev_device *dev, const char *filename)
 {
 	FILE *f;
@@ -760,6 +761,7 @@ static int import_file_into_properties(struct udev_device *dev, const char *file
 	fclose(f);
 	return 0;
 }
+#endif
 
 static int import_program_into_properties(struct udev_event *event, const char *program, const sigset_t *sigmask)
 {
@@ -2798,7 +2800,7 @@ void udev_rules_apply_static_dev_perms(struct udev_rules *rules)
 			}
 
 			if ((uid != 0 && uid != stats.st_uid) || (gid != 0 && gid != stats.st_gid)) {
-				chown(filename, uid, gid);
+				UDEV_IGNORE_VALUE(chown(filename, uid, gid));
 				info(rules->udev, "chown '%s' %u %u\n", filename, uid, gid);
 			}
 

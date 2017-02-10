@@ -195,7 +195,7 @@ static int adm_settle(struct udev *udev, int argc, char *argv[])
 			if (poll(pfd, 1, delay) > 0 && pfd[0].revents & POLLIN) {
 				char buf[sizeof(struct inotify_event) + PATH_MAX];
 
-				read(pfd[0].fd, buf, sizeof(buf));
+				UDEV_IGNORE_RESULT(read(pfd[0].fd, buf, sizeof(buf)));
 			}
 		} else {
 			sleep(1);

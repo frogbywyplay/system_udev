@@ -48,6 +48,10 @@ udev_log_null(struct udev *udev, const char *format, ...) {}
 
 #define UDEV_EXPORT __attribute__ ((visibility("default")))
 
+#define UDEV_IGNORE_VALUE(expr) do { \
+	if (expr) {}; \
+} while(0)
+
 static inline void udev_log_init(const char *program_name)
 {
 	openlog(program_name, LOG_PID | LOG_CONS, LOG_DAEMON);

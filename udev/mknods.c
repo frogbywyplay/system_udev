@@ -32,6 +32,7 @@
 
 static bool debug;
 
+#ifdef DEBUG
 static void log_fn(struct udev *udev, int priority,
 		   const char *file, int line, const char *fn,
 		   const char *format, va_list args)
@@ -48,11 +49,7 @@ static void log_fn(struct udev *udev, int priority,
 		vsyslog(priority, format, args);
 	}
 }
-
-static const struct udevadm_cmd *udevadm_cmds[] = {
-	&udevadm_trigger,
-	&udevadm_settle,
-};
+#endif
 
 static int run_command(struct udev *udev, const struct udevadm_cmd *cmd, int argc, char *argv[])
 {
@@ -68,12 +65,12 @@ static int run_command(struct udev *udev, const struct udevadm_cmd *cmd, int arg
 int main(int argc, char *argv[])
 {
 	struct udev *udev;
-	static const struct option options[] = {
 #ifdef DEBUG
+	static const struct option options[] = {
 		{ "debug", no_argument, NULL, 'd' },
-#endif
 		{}
 	};
+#endif
 	unsigned int i;
 	int rc = 1;
 	unsigned int attempt = 10;

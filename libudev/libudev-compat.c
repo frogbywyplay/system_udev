@@ -138,8 +138,8 @@ int libudev_compat_pipe2(int pipefd[2], int flags) {
 		goto err;
 
 	if ((flags & O_NONBLOCK) != 0 &&
-			(fd_set_non_blocking(pipefd[0]) == -1) ||
-			(fd_set_non_blocking(pipefd[1]) == -1))
+			(fd_set_non_blocking(pipefd[0]) == -1 ||
+			fd_set_non_blocking(pipefd[1]) == -1))
 		goto err;
 
 	return 0;
@@ -159,7 +159,7 @@ int libudev_compat_signalfd(int fd, const sigset_t *mask, int flags) {
 
   sfd = signalfd(fd, mask, flags);
   if (sfd != -1 || errno != EINVAL ||
-			(flags & (SFD_NONBLOCK | SFD_CLOEXEC) == 0))
+			((flags & (SFD_NONBLOCK | SFD_CLOEXEC)) == 0))
 		return sfd;
 
 	sfd = signalfd(fd, mask, 0);
@@ -188,7 +188,7 @@ int libudev_compat_socket(int domain, int type, int protocol) {
 
   fd = socket(domain, type, protocol);
   if (fd != -1 || errno != EINVAL ||
-			(type & (SOCK_NONBLOCK | SOCK_CLOEXEC) == 0))
+			((type & (SOCK_NONBLOCK | SOCK_CLOEXEC)) == 0))
 		return fd;
 
 	fd = socket(domain, type & ~(SOCK_NONBLOCK | SOCK_CLOEXEC), protocol);
@@ -217,7 +217,7 @@ int libudev_compat_socketpair(int domain, int type, int protocol, int sv[2]) {
 
   res = socketpair(domain, type, protocol, sv);
 	if (res != -1 || errno != EINVAL ||
-			(type & (SOCK_NONBLOCK | SOCK_CLOEXEC) == 0))
+			((type & (SOCK_NONBLOCK | SOCK_CLOEXEC)) == 0))
 		return res;
 
 	if (socketpair(domain, type & ~(SOCK_NONBLOCK | SOCK_CLOEXEC), protocol, sv)

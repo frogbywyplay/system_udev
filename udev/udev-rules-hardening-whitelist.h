@@ -8,15 +8,15 @@
 
 #include "udev-hardening-utils.h"
 
-static int ACCEPTED_RULE(char *i, char **w, int(*m)(char *, char *))
+static int ACCEPTED_RULE(const char *i, const char **w, int(*m)(const char *, const char *))
 {
-	char **j;
+	const char **j;
 	FOREACH(j, w)
 		if (m(*j, i)) return 1;
 	return 0;
 }
 
-int match(char *a, char *b) { return MATCH(a, b); }
+int match(const char *a, const char *b) { return MATCH(a, b); }
 
 #ifndef ACCEPTED_IMPORT_PROG
 # define ACCEPTED_IMPORT_PROG(i) ACCEPTED_RULE(i, \

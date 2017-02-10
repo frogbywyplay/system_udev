@@ -382,10 +382,10 @@ subst:
 			}
 			/* create temporary node */
 			dbg(event->udev, "tempnode: create temp node\n");
-			asprintf(&event->tmp_node, "%s/.tmp-%s-%u:%u",
+			UDEV_IGNORE_VALUE(asprintf(&event->tmp_node, "%s/.tmp-%s-%u:%u",
 				 udev_get_dev_path(event->udev), devtype,
 				 major(udev_device_get_devnum(dev)),
-				 minor(udev_device_get_devnum(dev)));
+				 minor(udev_device_get_devnum(dev))));
 			if (event->tmp_node == NULL)
 				break;
 			udev_node_mknod(dev, event->tmp_node, 0600, 0, 0);

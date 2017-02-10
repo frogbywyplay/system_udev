@@ -29,7 +29,7 @@ void udev_vklog(const char *format, va_list args)
     /* write() will return 0 if the kernel has no printk support. This causes
      * stdio functions to block, so we cannot use them. As we cannot rely on
      * the return value, we simply ignore it. */
-		(void)write(klog, msg, size);
+		UDEV_IGNORE_VALUE(write(klog, msg, size));
 
 	(void)close(klog);
 }

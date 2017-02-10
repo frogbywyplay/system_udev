@@ -120,7 +120,7 @@ int util_unlink_secure(struct udev *udev, const char *filename)
 {
 	int err;
 
-	chown(filename, 0, 0);
+	UDEV_IGNORE_VALUE(chown(filename, 0, 0));
 	chmod(filename, 0000);
 	err = unlink(filename);
 	if (errno == ENOENT)
