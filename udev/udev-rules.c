@@ -2288,17 +2288,30 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 				if (cur->key.op == OP_NOMATCH)
 					goto nomatch;
 			}
+#else
+			char program[UTIL_PATH_SIZE];
+
+			udev_event_apply_format(event, &rules->buf[cur->key.value_off], program, sizeof(program));
+			err(event->udev, "not allowing PROGRAM '%s' %s:%u\n",
+					program,
+					&rules->buf[rule->rule.filename_off],
+					rule->rule.filename_line);
 #endif
 			break;
 		}
 		case TK_M_IMPORT_FILE: {
-#ifndef ENABLE_WHITELIST
 			char import[UTIL_PATH_SIZE];
 
 			udev_event_apply_format(event, &rules->buf[cur->key.value_off], import, sizeof(import));
+#ifndef ENABLE_WHITELIST
 			if (import_file_into_properties(event->dev, import) != 0)
 				if (cur->key.op != OP_NOMATCH)
 					goto nomatch;
+#else
+			err(event->udev, "not allowing IMPORT{file} '%s' %s:%u\n",
+					import,
+					&rules->buf[rule->rule.filename_off],
+					rule->rule.filename_line);
 #endif
 			break;
 		}
@@ -2319,10 +2332,10 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 						goto nomatch;
 #ifdef ENABLE_WHITELIST
 			} else {
-				info(event->udev, "not allowing IMPORT '%s' %s:%u\n",
-						 import,
-						 &rules->buf[rule->rule.filename_off],
-						 rule->rule.filename_line);
+				err(event->udev, "not allowing IMPORT{program} '%s' %s:%u\n",
+						import,
+						&rules->buf[rule->rule.filename_off],
+						rule->rule.filename_line);
 			}
 #endif
 			break;
@@ -2359,7 +2372,7 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 				}
 #ifdef ENABLE_WHITELIST
 			} else {
-				info(event->udev, "not allowing IMPORT builtin '%s' %s:%u\n",
+				err(event->udev, "not allowing IMPORT{builtin} '%s' %s:%u\n",
 						 udev_builtin_name(cur->key.builtin_cmd),
 						 &rules->buf[rule->rule.filename_off],
 						 rule->rule.filename_line);
@@ -2368,8 +2381,8 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 			break;
 		}
 		case TK_M_IMPORT_DB: {
-#ifndef ENABLE_WHITELIST
 			const char *key = &rules->buf[cur->key.value_off];
+#ifndef ENABLE_WHITELIST
 			const char *value;
 
 			value = udev_device_get_property_value(event->dev_db, key);
@@ -2382,6 +2395,11 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 				if (cur->key.op != OP_NOMATCH)
 					goto nomatch;
 			}
+#else
+			err(event->udev, "not allowing IMPORT{db} '%s' %s:%u\n",
+					key,
+					&rules->buf[rule->rule.filename_off],
+					rule->rule.filename_line);
 #endif
 			break;
 		}
@@ -2426,6 +2444,11 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 			}
 			if (!imported && cur->key.op != OP_NOMATCH)
 				goto nomatch;
+#else
+			err(event->udev, "not allowing IMPORT{cmdline} '%s' %s:%u\n",
+					&rules->buf[cur->key.value_off],
+					&rules->buf[rule->rule.filename_off],
+					rule->rule.filename_line);
 #endif
 			break;
 		}
@@ -2441,7 +2464,7 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 						goto nomatch;
 #ifdef ENABLE_WHITELIST
 			} else {
-			    info(event->udev, "not allowing import parent '%s'\n", import);
+			    info(event->udev, "not allowing IMPORT{parent} '%s'\n", import);
 			}
 #endif
 			break;
@@ -2703,10 +2726,10 @@ int udev_rules_apply_to_event(struct udev_rules *rules, struct udev_event *event
 				udev_list_entry_add(&event->run_list, &rules->buf[cur->key.value_off], NULL);
 #ifdef ENABLE_WHITELIST
 			} else {
-				info(event->udev, "not allowing RUN '%s' %s:%u\n",
-						 &rules->buf[cur->key.value_off],
-						 &rules->buf[rule->rule.filename_off],
-						 rule->rule.filename_line);
+				err(event->udev, "not allowing RUN '%s' %s:%u\n",
+						&rules->buf[cur->key.value_off],
+						&rules->buf[rule->rule.filename_off],
+						rule->rule.filename_line);
 			}
 #endif
 			break;
