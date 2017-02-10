@@ -245,10 +245,10 @@ EXTRA_DIST += \
 	udev/udevd.xml
 
 udev/%.7 udev/%.8 : udev/%.xml
-	$(AM_V_GEN)$(XSLTPROC) -o $@ -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
+	$(AM_V_GEN)$(XSLTPROC) -o $@ -nonet /usr/share/sgml/docbook/xsl-stylesheets/manpages/docbook.xsl $<
 
 udev/%.html : udev/%.xml
-	$(AM_V_GEN)$(XSLTPROC) -o $@ -nonet http://docbook.sourceforge.net/release/xsl/current/xhtml-1_1/docbook.xsl $<
+	$(AM_V_GEN)$(XSLTPROC) -o $@ -nonet /usr/share/sgml/docbook/xsl-stylesheets/xhtml/docbook.xsl $<
 
 # ------------------------------------------------------------------------------
 # udev tests
