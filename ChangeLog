@@ -1,3 +1,11 @@
+175.3 -- 13/02/2017
+- Remove the seqnum API as it breaks when using namespaces.
+- Use local docbook to generate documentation.
+- Display an error message for all non-whitelisted keys.
+- Fix build warnings.
+- Remove generated files and add .gitignore.
+- Fix typography in configure.ac.
+
 175.2 -- 07/12/2016
 - fix compilation on ALI harware when linking with lxc-genesis
 
