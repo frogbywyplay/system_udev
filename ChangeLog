@@ -1,3 +1,6 @@
+175.4 -- 28/03/2017
+- udevadm settle doesn't report an error when queue is empty.
+
 175.3 -- 13/02/2017
 - Remove the seqnum API as it breaks when using namespaces.
 - Use local docbook to generate documentation.
