@@ -117,7 +117,11 @@ static int adm_settle(struct udev *udev, int argc, char *argv[])
 
 	util_strscpyl(queue_filename, sizeof(queue_filename), udev_get_run_path(udev), "/queue", NULL);
 	if (inotify_add_watch(pfd[0].fd, queue_filename, IN_DELETE) < 0) {
-		err(udev, "watching %s failed\n", queue_filename);
+		/* If it does not exist, we don't have to wait */
+		if (errno == ENOENT)
+			rc = EXIT_SUCCESS;
+		else
+			err(udev, "watching %s failed\n", queue_filename);
 		goto out;
 	}
 
