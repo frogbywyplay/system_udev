@@ -183,8 +183,8 @@ udev_udevd_LDFLAGS = \
 udev_udevd_LDADD = libudev/libudev-private.la
 
 if WITH_LXC_GENESIS
-udev_udevd_CFLAGS = $(lxc_genesis_CFLAGS)
-udev_udevd_LDFLAGS += $(lxc_genesis_LIBS)
+udev_udevd_CFLAGS = $(lxc_genesis_CFLAGS) -fPIE
+udev_udevd_LDFLAGS += $(lxc_genesis_LIBS) -pie
 endif
 
 if ENABLE_MKNODS
@@ -199,6 +199,12 @@ udev_mknods_SOURCES = \
 	udev/config.h \
 	udev/mknods.c
 udev_mknods_LDADD = libudev/libudev-private.la
+
+if WITH_LXC_GENESIS
+udev_mknods_CFLAGS = -fPIE
+udev_mknods_LDFLAGS = -pie
+endif
+
 endif
 
 if ENABLE_UDEVINFO
