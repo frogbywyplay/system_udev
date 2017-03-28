@@ -1,3 +1,6 @@
+175.5 -- 28/03/2017
+- add -fPIE and -pie compilation & link flags udevd and mknods
+
 175.4 -- 28/03/2017
 - udevadm settle doesn't report an error when queue is empty.
 
