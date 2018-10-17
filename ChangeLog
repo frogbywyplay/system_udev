@@ -1,3 +1,6 @@
+175.6 -- 17/10/2018
+- adding stdin.h header to fix compilation issue with gcc63
+
 175.5 -- 28/03/2017
 - add -fPIE and -pie compilation & link flags udevd and mknods
 
@@ -20,7 +23,8 @@
 - Add "mknods", a statically configured udevadm (to limit its usage)
 
 Summary of changes from v174 to v175
-============================================
+
+==========
 
 David Zeuthen (2):
       gudev: Use strtoul to parse unsigned 64-bit integers
@@ -53,7 +57,6 @@ Martin Pitt (8):
 
 
 Summary of changes from v173 to v174
-============================================
 
 David Zeuthen (1):
       ata_id: Check for Compact Flash card
@@ -121,7 +124,6 @@ Thomas Hood (2):
 
 
 Summary of changes from v172 to v173
-============================================
 
 Allin Cottrell (1):
       configure: allow to disable mtd_probe
@@ -151,7 +153,6 @@ Martin Pitt (4):
 
 
 Summary of changes from v171 to v172
-============================================
 
 Bastien Nocera (3):
       accelerometer: add orientation property
@@ -216,7 +217,6 @@ Peter Jones (1):
 
 
 Summary of changes from v170 to v171
-============================================
 
 Kay Sievers (17):
       libudev: export symbols explicitely and individually from C code not from separate file or prefix match
@@ -242,7 +242,6 @@ Scott James Remnant (1):
 
 
 Summary of changes from v169 to v170
-============================================
 
 Kay Sievers (1):
       libudev: ctrl - properly wait for incoming message after connect
@@ -252,7 +251,6 @@ Michal Soltys (1):
 
 
 Summary of changes from v168 to v169
-============================================
 
 Kay Sievers (26):
       simplify rules file overwrite logic
@@ -328,7 +326,6 @@ Nix (1):
 
 
 Summary of changes from v167 to v168
-============================================
 
 David Zeuthen (1):
       Run ata_id on non-removable USB devices
@@ -409,7 +406,6 @@ Thomas Egerer (1):
 
 
 Summary of changes from v166 to v167
-============================================
 
 Andrey Borzenkov (1):
       udev-acl: add /dev/sgX nodes for CD-ROM
@@ -483,7 +479,6 @@ Thomas Egerer (3):
 
 
 Summary of changes from v165 to v166
-============================================
 
 Chris Bagwell (1):
       Remap Eee PC touchpad toggle key to F21 used by X
@@ -516,7 +511,6 @@ Matthew Garrett (1):
 
 
 Summary of changes from v164 to v165
-============================================
 
 Andy Whitcroft (1):
       keymap: Add release quirks for two Zepto Znote models and AMILO Xi 2428
@@ -579,7 +573,6 @@ Michal Soltys (1):
 
 
 Summary of changes from v163 to v164
-============================================
 
 David Zeuthen (1):
       Install libgudev-1.0.so in prefix / instead of prefix /usr
@@ -599,7 +592,6 @@ Martin Pitt (2):
 
 
 Summary of changes from v162 to v163
-============================================
 
 David Zeuthen (2):
       gudev: Deliver ::uevent signal in the thread-default main loop
@@ -633,7 +625,6 @@ Torsten Schoenfeld (1):
 
 
 Summary of changes from v161 to v162
-============================================
 
 David Woodhouse (1):
       Add keymap for Lenovo IdeaPad S10-3
@@ -683,7 +674,6 @@ Michal Soltys (1):
 
 
 Summary of changes from v160 to v161
-============================================
 
 Fortunato Ventre (1):
       keymap: Add force-release quirks for a lot more Samsung models
@@ -745,7 +735,6 @@ Yin Kangkai (7):
 
 
 Summary of changes from v159 to v160
-============================================
 
 Harald Hoyer (2):
       60-persistent-storage-tape: s/path_id.sh/path_id/
@@ -766,7 +755,6 @@ Martin Pitt (2):
 
 
 Summary of changes from v158 to v159
-============================================
 
 Jerone Young (1):
       Fix stuck volume key presses for Toshiba Satellite U300 & U305models
@@ -796,7 +784,6 @@ Ryan Harper (2):
 
 
 Summary of changes from v157 to v158
-============================================
 
 Harald Hoyer (1):
       extras/keymap: add Samsung N210 to keymap rules
@@ -824,7 +811,6 @@ Paul Bender (1):
 
 
 Summary of changes from v156 to v157
-============================================
 
 Harald Hoyer (1):
       40-redhat.rules: removed file
@@ -863,7 +849,6 @@ Kay Sievers (25):
 
 
 Summary of changes from v155 to v156
-============================================
 
 Bryan Kadzban (1):
       udevd: fix typo /proc/fd -> /proc/self/fd
@@ -876,7 +861,6 @@ Kay Sievers (4):
 
 
 Summary of changes from v154 to v155
-============================================
 
 Kay Sievers (11):
       reset process priority before executing RUN+=
@@ -893,7 +877,6 @@ Kay Sievers (11):
 
 
 Summary of changes from v153 to v154
-============================================
 
 Harald Hoyer (2):
       Makefile.am: add LGPL COPYING file to EXTRA_DIST
@@ -948,7 +931,6 @@ Yin Kangkai (2):
 
 
 Summary of changes from v152 to v153
-============================================
 
 Kay Sievers (1):
       configure.ac: version bump
@@ -958,7 +940,6 @@ Robby Workman (1):
 
 
 Summary of changes from v151 to v152
-============================================
 
 Adrian Bunk (1):
       udev needs automake 1.10
@@ -1079,7 +1060,6 @@ Yury G. Kudryashov (3):
 
 
 Summary of changes from v150 to v151
-============================================
 
 Amit Shah (1):
       rules: Add symlink rule for virtio ports
@@ -1118,7 +1098,6 @@ Martin Pitt (4):
 
 
 Summary of changes from v149 to v150
-============================================
 
 Clemens Buchacher (2):
       add Samsung R70/R71 keymap
@@ -1187,7 +1166,6 @@ Thomas de Grenier de Latour (1):
 
 
 Summary of changes from v148 to v149
-============================================
 
 Daniel Elstner (1):
       really fix both in-tree and out-of-tree builds
@@ -1211,7 +1189,6 @@ Martin Pitt (6):
 
 
 Summary of changes from v147 to v148
-============================================
 
 Dan Williams (3):
       Revert "modem-modeswitch: add a device"
@@ -1255,7 +1232,6 @@ Scott James Remnant (1):
 
 
 Summary of changes from v146 to v147
-============================================
 
 Alan Jenkins (1):
       udevd: queue-export - remove retry loop
@@ -1401,7 +1377,6 @@ William Jon McCann (1):
 
 
 Summary of changes from v145 to v146
-============================================
 
 Alan Jenkins (3):
       man: fix unused, inaccurate metadata
@@ -1489,7 +1464,6 @@ Martin Pitt (17):
 
 
 Summary of changes from v144 to v145
-============================================
 
 Ian Campbell (1):
       scsi_id: correct error handling in prepend_vendor_model
@@ -1508,7 +1482,6 @@ Kay Sievers (10):
 
 
 Summary of changes from v143 to v144
-============================================
 
 Jon Masters (1):
       firmware: search for third party or sysadmin supplied firmware updates
@@ -1543,7 +1516,6 @@ Stefan Richter (1):
 
 
 Summary of changes from v142 to v143
-============================================
 
 Alan Jenkins (5):
       udevadm: settle - fix timeout
@@ -1686,7 +1658,6 @@ Scott James Remnant (1):
 
 
 Summary of changes from v141 to v142
-============================================
 
 Andre Przywara (1):
       rules: create /dev/cpu/<n>/cpuid world readable
@@ -1749,7 +1720,6 @@ Lubomir Rintel (1):
 
 
 Summary of changes from v140 to v141
-============================================
 
 Adam Buchbinder (4):
       usb_id: add manpage
@@ -1794,7 +1764,6 @@ Scott James Remnant (1):
 
 
 Summary of changes from v139 to v140
-============================================
 
 Harald Hoyer (1):
       libvolume_id: bump age
@@ -1821,7 +1790,6 @@ Scott James Remnant (1):
 
 
 Summary of changes from v138 to v139
-============================================
 
 Kay Sievers (11):
       version bump
@@ -1850,7 +1818,6 @@ Scott James Remnant (10):
 
 
 Summary of changes from v137 to v138
-============================================
 
 David Zeuthen (1):
       *_id: add model/vendor enc strings
@@ -1886,7 +1853,6 @@ Scott James Remnant (2):
 
 
 Summary of changes from v136 to v137
-============================================
 
 Alan Jenkins (2):
       man: typo fixes
@@ -1927,7 +1893,6 @@ Sven Jost (1):
 
 
 Summary of changes from v135 to v136
-============================================
 
 Adam Buchbinder (1):
       extras: fix mis-spelling of "environment"
@@ -2010,7 +1975,6 @@ Ryan Thomas (1):
 
 
 Summary of changes from v134 to v135
-============================================
 
 Kay Sievers (6):
       usb_id: add "break" to currently unused case labels
@@ -2029,7 +1993,6 @@ Piter PUNK (2):
 
 
 Summary of changes from v133 to v134
-============================================
 
 Gabor Z. Papp (1):
       include errno.h in sysdeps.h
@@ -2067,7 +2030,6 @@ Peter Breitenlohner (2):
 
 
 Summary of changes from v132 to v133
-============================================
 
 Alan Jenkins (2):
       udevd: de-duplicate strings in rules
@@ -2105,7 +2067,6 @@ Sergey Vlasov (1):
 
 
 Summary of changes from v131 to v132
-============================================
 
 Kay Sievers (2):
       fix size_t compiler warning on 32 bit platforms
@@ -2113,7 +2074,6 @@ Kay Sievers (2):
 
 
 Summary of changes from v130 to v131
-============================================
 
 Alan Jenkins (17):
       libudev: fix sysnum logic for digit-only device names
@@ -2257,7 +2217,6 @@ Steven Whitehouse (1):
 
 
 Summary of changes from v129 to v130
-============================================
 
 Kay Sievers (26):
       fix compile error with --disable-logging
@@ -2289,7 +2248,6 @@ Kay Sievers (26):
 
 
 Summary of changes from v128 to v129
-============================================
 
 Alan Jenkins (7):
       udev-test.pl: set non-zero exitcode if tests fail
@@ -2350,7 +2308,6 @@ Kay Sievers (46):
 
 
 Summary of changes from v127 to v128
-============================================
 
 Alan Jenkins (8):
       fix uninitialized name_list error::ignore_error
@@ -2419,7 +2376,6 @@ Kay Sievers (53):
 
 
 Summary of changes from v126 to v127
-============================================
 
 Karel Zak (2):
       build-sys: don't duplicate file names
@@ -2458,7 +2414,6 @@ Michal Soltys (1):
 
 
 Summary of changes from v125 to v126
-============================================
 
 Kay Sievers (9):
       delete all Makefiles and move udev source to udev/
@@ -2479,7 +2434,6 @@ Thomas Koeller (1):
 
 
 Summary of changes from v124 to v125
-============================================
 
 John Huttley (1):
       rules: tape rules - add nst to usb and 1394 links
@@ -2520,14 +2474,12 @@ Tobias Klauser (1):
 
 
 Summary of changes from v123 to v124
-============================================
 
 Kay Sievers (1):
       cdrom_id: fix recognition of blank media
 
 
 Summary of changes from v122 to v123
-============================================
 
 Erik van Konijnenburg (3):
       add substitution in MODE= field
@@ -2557,7 +2509,6 @@ Xinwei Hu (2):
 
 
 Summary of changes from v121 to v122
-============================================
 
 Hannes Reinecke (2):
       scsi_id: remove all sysfs dependencies
@@ -2585,7 +2536,6 @@ Matthias Schwarzott (1):
 
 
 Summary of changes from v120 to v121
-============================================
 
 Damjan Georgievski (1):
       libvolume_id: recognize swap partitions with a tuxonice hibernate image
@@ -2624,7 +2574,6 @@ Kay Sievers (21):
 
 
 Summary of changes from v119 to v120
-============================================
 
 Kay Sievers (9):
       test: remove duplicated EXTRA entry
@@ -2642,7 +2591,6 @@ Michael Kralka (1):
 
 
 Summary of changes from v118 to v119
-============================================
 
 Anthony L. Awtrey (1):
       do not skip RUN execution if device node removal fails
@@ -2681,7 +2629,6 @@ Roy Marples (1):
 
 
 Summary of changes from v117 to v118
-============================================
 
 Daniel Drake (1):
       doc: update "writing udev rules"
@@ -2708,7 +2655,6 @@ Michael Prokop (1):
 
 
 Summary of changes from v116 to v117
-============================================
 
 Dan Nicholson (2):
       extras: ignore built and generated files
@@ -2743,7 +2689,6 @@ VMiklos (1):
 
 
 Summary of changes from v115 to v116
-============================================
 
 Bryan Kadzban (1):
       rules: fix typos
@@ -2797,7 +2742,6 @@ maximilian attems (1):
 
 
 Summary of changes from v114 to v115
-============================================
 
 Harald Hoyer (1):
       rules: fix typo in 80-drivers.rules
@@ -2826,7 +2770,6 @@ Marco d'Itri (3):
 
 
 Summary of changes from v113 to v114
-============================================
 
 Hannes Reinecke (3):
       collect: extra to synchronize actions across events
@@ -2869,7 +2812,6 @@ Richard Hughes (1):
 
 
 Summary of changes from v112 to v113
-============================================
 
 David Zeuthen (1):
       vol_id: do not fail if unable to drop privileges
@@ -2893,7 +2835,6 @@ Tobias Klauser (1):
 
 
 Summary of changes from v111 to v112
-============================================
 
 Fabio Massimo Di Nitto (1):
       rules: ignore partitons that span the entire disk
@@ -2950,7 +2891,6 @@ Scott James Remnant (2):
 
 
 Summary of changes from v110 to v111
-============================================
 
 Kay Sievers (19):
       rules: SUSE update
@@ -2979,7 +2919,6 @@ Matthias Schwarzott (2):
 
 
 Summary of changes from v109 to v110
-============================================
 
 Harald Hoyer (1):
       udevcontrol: allow to set global variables in udevd
@@ -3006,7 +2945,6 @@ Matthias Schwarzott (3):
 
 
 Summary of changes from v108 to v109
-============================================
 
 Harald Hoyer (1):
       create_floppy_devices: create nodes with correct selinux context
@@ -3033,7 +2971,6 @@ VMiklos (1):
 
 
 Summary of changes from v107 to v108
-============================================
 
 Kay Sievers (3):
       udevinfo: relax check for the correct device if looked up by name
@@ -3049,7 +2986,6 @@ Pozsar Balazs (1):
 
 
 Summary of changes from v106 to v107
-============================================
 
 Jean Tourrilhes (1):
       udevtest: export UDEV_LOG if we changed it
@@ -3098,7 +3034,6 @@ Matthias Schwarzott (2):
 
 
 Summary of changes from v105 to v106
-============================================
 
 A. Costa (1):
       man: fix typos in scsi_id and udevd
@@ -3146,7 +3081,6 @@ Theodoros V. Kalamatianos (1):
 
 
 Summary of changes from v104 to v105
-============================================
 
 A. Costa (1):
       man: fix typos in scsi_id and udevd
@@ -3173,7 +3107,6 @@ Sergey Vlasov (3):
 
 
 Summary of changes from v103 to v104
-============================================
 
 Kay Sievers (12):
       update Fedora rules
@@ -3201,7 +3134,6 @@ Russell Coker (1):
 
 
 Summary of changes from v102 to v103
-============================================
 
 Kay Sievers:
       persistent storage rules: skip gnbd devices
@@ -3212,7 +3144,6 @@ Kay Sievers:
 
 
 Summary of changes from v101 to v102
-============================================
 
 Daniel Drake:
       writing_udev_rules: fix typo in example rule
@@ -3231,7 +3162,6 @@ MUNEDA Takahiro:
 
 
 Summary of changes from v100 to v101
-============================================
 
 Arjan Opmeer:
       fix udevinfo help text typo
@@ -3269,7 +3199,6 @@ VMiklos:
 
 
 Summary of changes from v099 to v100
-============================================
 
 Kay Sievers:
       update SUSE rules
@@ -3279,7 +3208,6 @@ Kay Sievers:
 
 
 Summary of changes from v098 to v099
-============================================
 
 Greg KH:
       update Gentoo rules
@@ -3318,7 +3246,6 @@ Sergey Vlasov:
 
 
 Summary of changes from v097 to v098
-============================================
 
 Alex Merry:
       udevtest: allow /sys in the devpath paramter
@@ -3364,7 +3291,6 @@ Michał Bartoszkiewicz:
 
 
 Summary of changes from v096 to v097
-============================================
 
 Anssi Hannula:
       add joystick support to persistent input rules
@@ -3412,7 +3338,6 @@ Richard Purdie:
 
 
 Summary of changes from v095 to v096
-============================================
 
 Kay Sievers:
       Makefiles: fix .PHONY for man page target
@@ -3421,7 +3346,6 @@ Kay Sievers:
 
 
 Summary of changes from v094 to v095
-============================================
 
 Kay Sievers:
       update SUSE rules
@@ -3437,7 +3361,6 @@ Tobias Klauser:
 
 
 Summary of changes from v093 to v094
-============================================
 
 Daniel Drake:
       update "writing udev rules"
@@ -3452,7 +3375,6 @@ Marco d'Itri:
 
 
 Summary of changes from v092 to v093
-============================================
 
 Hannes Reinecke:
       path_id: add support for iSCSI devices
@@ -3468,7 +3390,6 @@ Kay Sievers:
 
 
 Summary of changes from v091 to v092
-============================================
 
 Kay Sievers:
       don't include stropts.h, some libc's don't like it
@@ -3493,7 +3414,6 @@ Marco d'Itri:
 
 
 Summary of changes from v090 to v091
-============================================
 
 Hannes Reinecke:
       path_id: fix SAS device path generation
@@ -3506,7 +3426,6 @@ Kay Sievers:
 
 
 Summary of changes from v089 to v090
-============================================
 
 Kay Sievers:
       udevd: export current seqnum and add udevsettle
@@ -3530,7 +3449,6 @@ Matt Kraai:
 
 
 Summary of changes from v088 to v089
-============================================
 
 Hannes Reinecke:
       path_id: add bus to USB path
@@ -3561,7 +3479,6 @@ Kay Sievers:
 
 
 Summary of changes from v087 to v088
-============================================
 
 Hannes Reinecke:
       persistent links: add scsi tape links and usb path support
@@ -3580,7 +3497,6 @@ Kay Sievers:
 
 
 Summary of changes from v086 to v087
-============================================
 
 Hannes Reinecke:
       path_id: support SAS devices
@@ -3595,7 +3511,6 @@ Masatake YAMATO:
 
 
 Summary of changes from v085 to v086
-============================================
 
 Kay Sievers:
       volume_id: replace __packed__ by PACKED macro
@@ -3611,7 +3526,6 @@ Nix:
 
 
 Summary of changes from v084 to v085
-============================================
 
 Andrey Borzenkov:
       Fix trivial spelling errors in RELEASE-NOTES
@@ -3632,7 +3546,6 @@ Kay Sievers:
 
 
 Summary of changes from v083 to v084
-============================================
 
 Kay Sievers:
       update SUSE rules
@@ -3648,7 +3561,6 @@ Kay Sievers:
 
 
 Summary of changes from v082 to v083
-============================================
 
 Andrey Borzenkov:
       man page: document when substitutions are applied for RUN and other keys
@@ -3662,7 +3574,6 @@ Kay Sievers:
 
 
 Summary of changes from v081 to v082
-============================================
 
 Andrey Borzenkov:
       substitute format chars in RUN after rule matching
@@ -3689,7 +3600,6 @@ Olivier Blin:
 
 
 Summary of changes from v080 to v081
-============================================
 
 Kay Sievers:
       add DEVLINKS to "remove" event
@@ -3700,7 +3610,6 @@ Kay Sievers:
 
 
 Summary of changes from v079 to v080
-============================================
 
 Brent Cook:
       fix dependency for make -j2
@@ -3721,7 +3630,6 @@ Marco d'Itri:
 
 
 Summary of changes from v078 to v079
-============================================
 
 Kay Sievers:
       don't log error if database does not exist
@@ -3732,7 +3640,6 @@ Kay Sievers:
 
 
 Summary of changes from v077 to v078
-============================================
 
 Greg Kroah-Hartman:
       Update Gentoo udev main rule file.
@@ -3759,7 +3666,6 @@ Kurt Garloff:
 
 
 Summary of changes from v076 to v077
-============================================
 
 Kay Sievers:
       merge two consecutive static strlcat's
@@ -3780,7 +3686,6 @@ Marco d'Itri:
 
 
 Summary of changes from v75 to v076
-============================================
 
 Kay Sievers:
       fix typo in eventrecorder
@@ -3809,7 +3714,6 @@ Scott James Remnant:
 
 
 Summary of changes from v74 to v075
-============================================
 
 Greg Kroah-Hartman:
       Make run_directory.c stat the place it is going to try to run.
@@ -3827,7 +3731,6 @@ Kay Sievers:
 
 
 Summary of changes from v73 to v074
-============================================
 
 Kay Sievers:
       never queue events with TIMEOUT set
@@ -3841,7 +3744,6 @@ Marco d'Itri:
 
 
 Summary of changes from v72 to v073
-============================================
 
 Kay Sievers:
       udevd: depend on netlink and remove all sequence reorder logic
@@ -3850,7 +3752,6 @@ Kay Sievers:
 
 
 Summary of changes from v71 to v072
-============================================
 
 Ananth N Mavinakayanahalli:
   libsysfs: translate devpath of the symlinked class devices to its real path
@@ -3895,7 +3796,6 @@ Kay Sievers:
 
 
 Summary of changes from v70 to v071
-============================================
 
 Greg Kroah-Hartman:
       Remove the udev.spec file as no one uses it anymore
@@ -3928,7 +3828,6 @@ Marco d'Itri:
 
 
 Summary of changes from v069 to v070
-============================================
 
 Amir Shalem:
   udevd: fix udevd read() calls to leave room for null byte
@@ -3954,7 +3853,6 @@ Olivier Blin:
 
 
 Summary of changes from v068 to v069
-============================================
 
 Amir Shalem:
   fix typo in firmware_helper
@@ -4023,7 +3921,6 @@ Thierry Vignaud:
 
 
 Summary of changes from v067 to v068
-============================================
 
 Greg Kroah-Hartman:
   add EXTRAS documentation to the README file.
@@ -4041,7 +3938,6 @@ Kay Sievers:
 
 
 Summary of changes from v066 to v067
-============================================
 
 Greg Kroah-Hartman:
   added the cdrom.h #defines directly into the cdrom_id.c file
@@ -4055,7 +3951,6 @@ Kay Sievers:
 
 
 Summary of changes from v065 to v066
-============================================
 
 Greg Kroah-Hartman:
   update gentoo rule file.
@@ -4094,7 +3989,6 @@ Thierry Vignaud:
 
 
 Summary of changes from v064 to v065
-============================================
 
 Greg Kroah-Hartman:
   Added persistent name rules for block devices to gentoo rule file.
@@ -4109,7 +4003,6 @@ Kay Sievers:
 
 
 Summary of changes from v063 to v064
-============================================
 
 Andre Masella:
   volume_id: add OCFS (Oracle Cluster File System) support
@@ -4128,7 +4021,6 @@ Kay Sievers:
 
 
 Summary of changes from v062 to v063
-============================================
 
 Anton Farygin:
   fix typo in GROUP value application
@@ -4158,7 +4050,6 @@ Ville Skyttä:
 
 
 Summary of changes from v061 to v062
-============================================
 
 Kay Sievers:
   fix symlink values separated by multiple spaces
@@ -4169,7 +4060,6 @@ Kay Sievers:
   fix unquoted strings in udevinitsend
 
 Summary of changes from v060 to v061
-============================================
 
 Greg Kroah-Hartman:
   Sync up the Debian rules files
@@ -4195,7 +4085,6 @@ Kay Sievers:
 
 
 Summary of changes from v059 to v060
-============================================
 
 Greg Kroah-Hartman:
   Fix the gentoo udev rules to allow the box to boot properly
@@ -4211,7 +4100,6 @@ Marco d'Itri:
 
 
 Summary of changes from v058 to v059
-============================================
 
 Greg Kroah-Hartman:
   Update the gentoo rule file
@@ -4261,7 +4149,6 @@ Stefan Schweizer:
   Dialout group fix for capi devices in the gentoo rules file
 
 Summary of changes from v057 to v058
-============================================
 
 Daniel Drake:
   o Writing udev rules docs update
@@ -4288,7 +4175,6 @@ Masanao Igarashi:
   o Fix libsysfs issue with relying on the detach_state file to be
 
 Summary of changes from v056 to v057
-============================================
 
 <tklauser:access.unizh.ch>:
   o fix stupid all_partitions bug
@@ -4327,7 +4213,6 @@ Kay Sievers:
 
 
 Summary of changes from v055 to v056
-============================================
 
 <tklauser:access.unizh.ch>:
   o fix header paths in udev_libc_wrapper.c
@@ -4344,7 +4229,6 @@ Kay Sievers:
 
 
 Summary of changes from v054 to v055
-============================================
 
 <jkluebs:luebsphoto.com>:
   o This patch causes the remove handler to check that each symlink actually points to the correct devnode and skip it if it does not.
@@ -4423,7 +4307,6 @@ Thierry Vignaud:
 
 
 Summary of changes from v053 to v054
-============================================
 
 <tklauser:access.unizh.ch>:
   o udev_volume_id: add Reiser4 support
@@ -4455,7 +4338,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v052 to v053
-============================================
 
 Greg Kroah-Hartman:
   o fix gentoo fb permission issue
@@ -4476,7 +4358,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v051 to v052
-============================================
 
 <md:linux.it>:
   o debian: update rules files
@@ -4515,7 +4396,6 @@ Michael Buesch:
 
 
 Summary of changes from v050 to v051
-============================================
 
 <roland:digitalvampire.org>:
   o This fixes a silly mistake in how udevinfo prints the major and minor numbers (right now it prints the minor next to "MAJOR" and the major next to "MINOR" ;)
@@ -4575,7 +4455,6 @@ Michael Buesch:
   o The attached patch fixes the code path if namedev_name_device() fails
 
 Summary of changes from v049 to v050
-============================================
 
 <harald:redhat.com>:
   o selinux patch
@@ -4590,7 +4469,6 @@ Kay Sievers:
 
 
 Summary of changes from v048 to v049
-============================================
 
 Greg Kroah-Hartman:
   o fix 'make clean' error in klibc
@@ -4614,7 +4492,6 @@ Martin Schlemmer:
 
 
 Summary of changes from v047 to v048
-============================================
 
 Greg Kroah-Hartman:
   o fix udev_volume_id so it will now build properly
@@ -4622,7 +4499,6 @@ Greg Kroah-Hartman:
 
 
 Summary of changes from v046 to v047
-============================================
 
 <klauser:access.unizh.ch>:
   o Various typos and other litte errors in udev.8.in
@@ -4687,7 +4563,6 @@ Kay Sievers:
 
 
 Summary of changes from v045 to v046
-============================================
 
 Greg Kroah-Hartman:
   o make spotless for releases
@@ -4719,14 +4594,12 @@ Kay Sievers:
 
 
 Summary of changes from v044 to v045
-============================================
 
 Martin Schlemmer:
   o Some updates for Gentoo's udev rules
 
 
 Summary of changes from v043 to v044
-============================================
 
 Greg Kroah-Hartman:
   o add cdsymlinks.sh support to gentoo rules file
@@ -4740,7 +4613,6 @@ Kay Sievers:
 
 
 Summary of changes from v042 to v043
-============================================
 
 Greg Kroah-Hartman:
   o add test target to makefile
@@ -4764,7 +4636,6 @@ Kay Sievers:
 
 
 Summary of changes from v040 to v042
-============================================
 
 Greg Kroah-Hartman:
   o add inotify to the rules for gentoo
@@ -4782,7 +4653,6 @@ Kay Sievers:
 
 
 Summary of changes from v039 to v040
-============================================
 
 <jk:blackdown.de>:
   o wait_for_sysfs update for dm devices
@@ -4807,7 +4677,6 @@ Kay Sievers:
 
 
 Summary of changes from v038 to v039
-============================================
 
 Greg Kroah-Hartman:
   o Hopefully fix the vcs issue in wait_for_sysfs
@@ -4835,7 +4704,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v037 to v038
-============================================
 
 <andrew.patterson:hp.com>:
   o Re: Problem parsing %s in udev rules
@@ -4844,7 +4712,6 @@ Greg Kroah-Hartman:
   o fix up error in building extras and libsysfs
 
 Summary of changes from v036 to v037
-============================================
 
 <md:linux.it>:
   o small udev patch
@@ -4874,20 +4741,17 @@ Michael Buesch:
 
 
 Summary of changes from v035 to v036
-============================================
 
 Greg Kroah-Hartman:
   o add the error number to the error message in wait_for_sysfs to help out in debugging problems
 
 Summary of changes from v034 to v035
-============================================
 
 Greg Kroah-Hartman:
   o added ieee1394 support to wait_for_sysfs
   o update wait_for_sysfs with a bunch more devices thanks to user reports
 
 Summary of changes from v033 to v034
-============================================
 
 Kay Sievers:
   o wait_for_sysfs bluetooth class update
@@ -4903,7 +4767,6 @@ Greg Kroah-Hartman:
   o add support for i2c-adapter devices to wait_for_sysfs.c
 
 Summary of changes from v032 to v033
-============================================
 
 <harald:redhat.com>:
   o udev close on exec
@@ -4946,7 +4809,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v031 to v032
-============================================
 
 <harald:redhat.com>:
   o udev parse bug
@@ -4957,7 +4819,6 @@ Kay Sievers:
 
 
 Summary of changes from v030 to v031
-============================================
 
 <arun:codemovers.org>:
   o udev - read long lines from config files overflow fix
@@ -5003,14 +4864,12 @@ Tom Rini:
 
 
 Summary of changes from v029 to v030
-============================================
 
 Greg Kroah-Hartman:
   o fix stupid off-by-one bug that caused udevstart to die on x86-64 boxes
 
 
 Summary of changes from v028 to v029
-============================================
 
 Greg Kroah-Hartman:
   o add permission rule for jogdial device
@@ -5024,7 +4883,6 @@ Olaf Hering:
 
 
 Summary of changes from v027 to v028
-============================================
 
 <atul.sabharwal:intel.com>:
   o Patch for chassis_id exras module
@@ -5047,7 +4905,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v026 to v027
-============================================
 
 <fork0:users.sf.net>:
   o fix handle leak in udev_lib.c
@@ -5057,7 +4914,6 @@ Greg Kroah-Hartman:
 
 
 Summary of changes from v025 to v026
-============================================
 
 Arnd Bergmann:
   o udev rpm fix
@@ -5087,7 +4943,6 @@ Leann Ogasawara:
   o evaluate getenv() return value for udev_config.c
 
 Summary of changes from v024 to v025
-============================================
 
 <md:linux.it>:
   o devfs.sh-ide-floppy
@@ -5129,7 +4984,6 @@ Leann Ogasawara:
 
 
 Summary of changes from v023 to v024
-============================================
 
 <atul.sabharwal:intel.com>:
   o Add README for chassis_id
@@ -5191,7 +5045,6 @@ Kay Sievers:
 
 
 Summary of changes from v022 to v023
-============================================
 
 Kay Sievers:
   o hmm, handle net devices with udev?
@@ -5242,7 +5095,6 @@ Theodore Y. T'so:
 
 
 Summary of changes from v021 to v022
-============================================
 
 <ananth:in.ibm.com>:
   o more Libsysfs updates
@@ -5299,7 +5151,6 @@ Patrick Mansfield:
   o add tests for NAME="foo-%c{N}"
 
 Summary of changes from v020 to v021
-============================================
 
 Kay Sievers:
   o install udevinfo in /usr/bin
@@ -5313,7 +5164,6 @@ Greg Kroah-Hartman:
 
 
 Summary of changes from v019 to v020
-============================================
 
 <christophe.varoqui:free.fr>:
   o multipath update
@@ -5360,7 +5210,6 @@ Greg Kroah-Hartman:
 
 
 Summary of changes from v018 to v019
-============================================
 
 Kay Sievers:
   o TODO update
@@ -5392,7 +5241,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v017 to v018
-============================================
 
 <ext.devoteam.varoqui:sncf.fr>:
   o [PATCH] symlink dm-[0-9]* rule
@@ -5441,7 +5289,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v016 to v017
-============================================
 
 <azarah:nosferatu.za.org>:
   o make logging a config option
@@ -5495,7 +5342,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v015 to v016
-============================================
 
 <elkropac:students.zcu.cz>:
   o get_dev_number() in extras/ide-devfs.sh
@@ -5530,7 +5376,6 @@ Kay Sievers:
 
 
 Summary of changes from v014 to v015
-============================================
 
 <mbuesch:freenet.de>:
   o LFS init script update
@@ -5568,7 +5413,6 @@ Kay Sievers:
 
 
 Summary of changes from v013 to v014
-============================================
 
 <ananthmg:rediffmail.com>:
   o libsysfs update for refresh + namedev.c changes
@@ -5606,7 +5450,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v012 to v013
-============================================
 
 <eike-hotplug:sf-tec.de>:
   o LSB init script and other stuff
@@ -5660,7 +5503,6 @@ Kay Sievers:
 
 
 Summary of changes from v011 to v012
-============================================
 
 <azarah:nosferatu.za.org>:
   o make symlink work properly if there is already a file in its place
@@ -5705,7 +5547,6 @@ Greg Kroah-Hartman:
 
 
 Summary of changes from v010 to v011
-============================================
 
 <mbuesch:freenet.de>:
   o proper cleanup on udevdb_init() failure
@@ -5735,7 +5576,6 @@ Greg Kroah-Hartman:
 
 
 Summary of changes from v009 to v010
-============================================
 
 <ananth:in.ibm.com>:
   o change pgsize
@@ -5786,7 +5626,6 @@ Greg Kroah-Hartman:
 
 
 Summary of changes from v008 to v009
-============================================
 
 <christophe.varoqui:free.fr>:
   o more extras/multipath changes
@@ -5851,7 +5690,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v007 to v008
-============================================
 
 <azarah:nosferatu.za.org>:
   o more config file parsing robustness
@@ -5921,7 +5759,6 @@ Patrick Mansfield:
 
 
 Summary of changes from v006 to v007
-============================================
 
 <md:linux.it>:
   o fix segfault in parsing bad udev.permissions file
@@ -5951,7 +5788,6 @@ Olaf Hering:
   o static klibc udev does not link against crt0.o
 
 Summary of changes from v005 to v006
-============================================
 
 <chris_friesen:sympatico.ca>:
   o faster test scripts
@@ -6026,7 +5862,6 @@ Robert Love:
 
 
 Summary of changes from v004 to v005
-============================================
 
 <kay:vrfy.org>:
   o namedev.c comments + debug patch
@@ -6072,7 +5907,6 @@ Robert Love:
 
 
 Summary of changes from v003 to v004
-============================================
 
 Daniel E. F. Stekloff:
   o new version of libsysfs patch
@@ -6106,7 +5940,6 @@ Robert Love:
 
 
 Summary of changes from v0.2 to v003
-============================================
 
 Daniel E. F. Stekloff:
   o udevdb patch
@@ -6155,7 +5988,6 @@ Paul Mundt:
 
 
 Summary of changes from v0.1 to v0.2
-============================================
 
 Greg Kroah-Hartman:
   o more test stuff
@@ -6192,7 +6024,6 @@ Greg Kroah-Hartman:
 
 
 Summary of changes up to v0.1
-============================================
 
 Greg Kroah-Hartman:
   o added more documentation in README and TODO files
