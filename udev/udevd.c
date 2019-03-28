@@ -1310,9 +1310,8 @@ int main(int argc, char *argv[])
 		goto exit;
 	}
 
-	/* set umask before creating any file/directory */
+	/* At this point, umask has been configured by lxc-genesis contructor function */
 	UDEV_IGNORE_VALUE(chdir("/"));
-	umask(022);
 
 	/* create standard links, copy static nodes, create nodes from modules */
 	static_dev_create(udev);
