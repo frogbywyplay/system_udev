@@ -1,3 +1,6 @@
+175.7 -- 01/04/2019
+- Remove umask command: umask is managed by lxc-genesis constructor function.
+
 175.6 -- 17/10/2018
 - adding stdin.h header to fix compilation issue with gcc63
 
