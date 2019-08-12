@@ -1,3 +1,6 @@
+175.8 -- 12/08/2019
+- udev/mknods.c: increased default timeout from 10 to 60s
+
 175.7 -- 01/04/2019
 - Remove umask command: umask is managed by lxc-genesis constructor function.
 
