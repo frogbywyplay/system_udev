@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 #endif
 	unsigned int i;
 	int rc = 1;
-	unsigned int attempts = 10;
+	unsigned int attempts = 60;
 	char filename[UTIL_PATH_SIZE];
 
 	udev = udev_new();
